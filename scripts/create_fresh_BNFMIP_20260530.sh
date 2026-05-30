@@ -44,7 +44,10 @@ if [[ "$(hostname)" == *login* ]]; then
     exit 1
 fi
 
+# Some module scripts reference unset vars; temporarily relax nounset.
+set +u
 source ~/elm_env_cades_gcc12.sh
+set -u
 
 # =============================================================================
 # Configuration
@@ -71,7 +74,7 @@ PARAM_BON=${PARAMDIR}/clm_params_fun3_sfix01_bon_tuned.nc      # Bon FUN exps: s
 
 # CLM1PT atmospheric forcing directories
 CLM1PT_MAN=/home/braghiere/BNF_tom/inputdata/BNFMIP_forcing_from_OCN/BNF_Man/CLM1PT_data
-CLM1PT_HA1=/home/braghiere/BNF_tom/inputdata/BNFMIP_forcing_from_OCN/BNF_Ha1/CLM1PT_data
+CLM1PT_HA1=/home/braghiere/BNF_tom/inputdata/BNFMIP_forcing_from_OCN/BNF_Har/CLM1PT_data  # NOTE: dir is "BNF_Har" (legacy name), site is BNF-Ha1
 CLM1PT_BON=/home/braghiere/BNF_tom/inputdata/BNFMIP_forcing_from_OCN/BNF_Bon/CLM1PT_data
 
 # Bon special surface data (gelisol/organic soil for boreal)
@@ -691,7 +694,9 @@ set -euo pipefail
 echo "Wrapper running at \$(date) on \$(hostname)"
 echo "Submitting fixed run: ${FIXED_CASEID}"
 
+set +u
 source ~/elm_env_cades_gcc12.sh
+set -u
 
 if [[ ! -f "${FINIDAT}" ]]; then
     echo "ERROR: finidat not found: ${FINIDAT}"
