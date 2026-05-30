@@ -421,16 +421,19 @@ done
 echo "  Done: all FUN funsp finidat → nofun FN yr751"
 
 # --- Bonanza Creek FUN experiments: funsp customizations ---------------------
-# (Bon funsp: gelisol surfdata + spinup_mort=1; finidat already set above)
-echo "── Bon FUN funsp: gelisol + spinup_mortality_factor=1 ──"
+# Bon funsp: gelisol surfdata + spinup_mort=1 + disable finidat-fsurdat consistency
+# (finidat = nofun FN restart, which ran with DEFAULT surfdata; we override fsurdat
+#  to gelisol here, so the consistency check must be disabled)
+echo "── Bon FUN funsp: gelisol + spinup_mortality_factor=1 + consistency disabled ──"
 for nl_file in \
     "${FUN_BON_FUNSP}/user_nl_clm" \
     "${NOACC_BON_FUNSP}/user_nl_clm" \
     "${ACC_BON_FUNSP}/user_nl_clm"; do
-    set_nl_var "${nl_file}" "fsurdat"                "'${GELISOL}'"
-    set_nl_var "${nl_file}" "spinup_mortality_factor" "1"
+    set_nl_var "${nl_file}" "fsurdat"                          "'${GELISOL}'"
+    set_nl_var "${nl_file}" "spinup_mortality_factor"          "1"
+    set_nl_var "${nl_file}" "check_finidat_fsurdat_consistency" ".false."
 done
-echo "  Done: Bon funsp gelisol + spinup_mortality=1"
+echo "  Done: Bon funsp gelisol + spinup_mortality=1 + consistency off"
 
 # --- Bonanza Creek FUN experiments: TR customizations -----------------------
 # (Bon TR: gelisol surfdata + disable finidat-surfdata consistency check)
@@ -475,6 +478,22 @@ PBS_NOACC_BON=${OLMT}/scripts/noacc_transient_bon_${DATE}
 PBS_ACC_MAN=${OLMT}/scripts/acc_transient_manaus_${DATE}
 PBS_ACC_HA1=${OLMT}/scripts/acc_transient_ha1_${DATE}
 PBS_ACC_BON=${OLMT}/scripts/acc_transient_bon_${DATE}
+
+# Verify all required PBS scripts exist before submitting anything
+echo "── Verifying PBS scripts exist ──"
+for d in "${PBS_NF_MAN}" "${PBS_NF_HA1}" "${PBS_NF_BON}"; do
+    for s in ad_spinup iniadjust fn_spinup transient; do
+        [[ -f "${d}/${s}_group0.pbs" ]] || { echo "ERROR - MISSING PBS: ${d}/${s}_group0.pbs"; exit 1; }
+    done
+done
+for d in "${PBS_FUN_MAN}" "${PBS_FUN_HA1}" "${PBS_FUN_BON}" \
+         "${PBS_NOACC_MAN}" "${PBS_NOACC_HA1}" "${PBS_NOACC_BON}" \
+         "${PBS_ACC_MAN}" "${PBS_ACC_HA1}" "${PBS_ACC_BON}"; do
+    for s in fun_spinup transient; do
+        [[ -f "${d}/${s}_group0.pbs" ]] || { echo "ERROR - MISSING PBS: ${d}/${s}_group0.pbs"; exit 1; }
+    done
+done
+echo "  All 30 PBS scripts present"
 
 # ── nofun_baseline_manaus: AD → ini → FN → TR ──────────────────────────────
 echo "Submitting nofun_baseline_manaus chain..."
@@ -615,9 +634,14 @@ for exp in nofun_baseline fun_transient_only noacc_transient acc_transient; do
         FINIDAT="${RUNROOT}/${TR_CASEID}/run/${TR_CASEID}.clm2.r.2015-01-01-00000.nc"
         DEP_JID="${TR_JIDS[${exp}_${site}]}"
 
+        # Guard: TR JID must be a non-empty integer
+        if [[ -z "${DEP_JID}" || ! "${DEP_JID}" =~ ^[0-9]+$ ]]; then
+            echo "ERROR: transient JID for ${exp}/${site} is invalid: '${DEP_JID}'"
+            exit 1
+        fi
+
         echo ""
         echo "── fixed: ${exp} / ${site} (dep transient JID ${DEP_JID}) ──"
-
         # Clone with --keepexe (shares transient exe — no rebuild)
         if [[ ! -d "${FIXED_CASE}" ]]; then
             "${CREATE_CLONE}" --case "${FIXED_CASE}" --clone "${SRC_TR}" --keepexe --silent 2>&1 | tail -3
@@ -662,9 +686,12 @@ for exp in nofun_baseline fun_transient_only noacc_transient acc_transient; do
 #SBATCH --mem=4G
 #SBATCH -o ${LOGDIR}/submit_fixed_${exp}_${site}_%j.out
 #SBATCH -e ${LOGDIR}/submit_fixed_${exp}_${site}_%j.err
+set -euo pipefail
 
 echo "Wrapper running at \$(date) on \$(hostname)"
 echo "Submitting fixed run: ${FIXED_CASEID}"
+
+source ~/elm_env_cades_gcc12.sh
 
 if [[ ! -f "${FINIDAT}" ]]; then
     echo "ERROR: finidat not found: ${FINIDAT}"
@@ -673,7 +700,13 @@ if [[ ! -f "${FINIDAT}" ]]; then
 fi
 echo "finidat confirmed: ${FINIDAT}"
 
-cd "${FIXED_CASE}" && ./case.submit
+cd "${FIXED_CASE}"
+SUBMIT_OUT=\$(./case.submit 2>&1)
+echo "\${SUBMIT_OUT}"
+if ! echo "\${SUBMIT_OUT}" | grep -qE 'Submitted job|submitted'; then
+    echo "ERROR: case.submit did not appear to queue the job"
+    exit 1
+fi
 echo "Submission complete at \$(date)"
 WRAPEOF
         chmod +x "${WRAPPER}"
