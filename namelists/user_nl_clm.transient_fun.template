@@ -1,0 +1,19 @@
+&clm_inparm
+ hist_mfilt        = 365
+ hist_nhtfrq       = -24
+ finidat           = '<PATH_TO_FUN_FN_SPINUP_RESTART>'   ! from FUN spinup (FUN ON)
+ fsurdat           = '<PATH_TO_SURFDATA>'
+ flanduse_timeseries = '<PATH_TO_PFTDYN>'
+ check_finidat_fsurdat_consistency = .false.
+ check_finidat_year_consistency    = .false.
+ paramfile         = '<PATH_TO_CLM_PARAMS>'
+ fsoilordercon     = '<PATH_TO_CNP_PARAMETERS>'    ! Manaus only; omit for Ha1/Bon
+ stream_fldfilename_ndep = '<INPUTDATA>/lnd/clm2/ndepdata/fndep_clm_rcp8.5_simyr1849-2106_1.9x2.5_c100428.nc'
+ use_nitrif_denitrif = .true.
+ use_fun           = .true.     ! FUN ON
+ use_funp          = .true.     ! FUNP ON
+ use_lch4          = .false.
+ use_nofire        = .true.
+ nyears_ad_carbon_only   = 25
+ spinup_mortality_factor = 10
+/

@@ -1,0 +1,49 @@
+# ELM-FUN-BNFMIP .gitignore
+
+# Large binary data files
+*.nc
+*.nc4
+*.h5
+*.hdf
+*.hdf5
+
+# SLURM job output/error files
+*.out
+*.err
+run.*.[0-9]*
+chain_*.sh
+*_exps345_builder_*.sh
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Build logs
+build_*.log
+
+# Backup files
+*.bak
+*.backup_*
+
+# CIME case directories (tracked separately)
+cime_case_dirs/
+
+# Scratch/temp
+temp/
+*.tmp
+*.swp
+
+# Conda/virtualenv
+.conda/
+venv/
+
+# Editor
+.vscode/
+.idea/
+*~

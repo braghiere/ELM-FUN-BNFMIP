@@ -1,0 +1,34 @@
+&clm_inparm
+ hist_mfilt        = 365
+ hist_nhtfrq       = -24
+ finidat           = '<PATH_TO_I20TR_2015_RESTART>'  ! 2015-01-01 restart from I20TR run
+ fsurdat           = '<PATH_TO_SURFDATA>'
+ flanduse_timeseries = '<PATH_TO_PFTDYN>'
+ check_finidat_fsurdat_consistency = .false.
+ check_finidat_year_consistency    = .false.
+ paramfile         = '<PATH_TO_CLM_PARAMS>'
+ fsoilordercon     = '<PATH_TO_CNP_PARAMETERS>'    ! Manaus only; omit for Ha1/Bon
+ stream_fldfilename_ndep = '<INPUTDATA>/lnd/clm2/ndepdata/fndep_clm_rcp8.5_simyr1849-2106_1.9x2.5_c100428.nc'
+
+ ! ── Section 5.4: Fix Ndep at 2015 level ─────────────────────────────
+ ! Required by BNFMIP protocol: CO2 and N deposition remain as they were
+ ! at the end of 2014 (effectively 2015 initial conditions held constant).
+ ! Combined with DATM_CO2_TSERIES=none in env_run.xml, this fixes both
+ ! CO2 and Ndep while climate follows SSP5-8.5.
+ stream_year_first_ndep = 2015
+ stream_year_last_ndep  = 2015
+ ! ────────────────────────────────────────────────────────────────────
+
+ use_nitrif_denitrif = .true.
+ use_fun           = .true.     ! Set to .false. for nofun_baseline section 5.4
+ use_funp          = .true.     ! Set to .false. for nofun_baseline section 5.4
+ use_lch4          = .false.
+ use_nofire        = .true.
+ nyears_ad_carbon_only   = 25
+ spinup_mortality_factor = 10
+/
+
+! ── env_run.xml settings required for section 5.4 ──────────────────
+! ./xmlchange DATM_CO2_TSERIES=none
+! ./xmlchange CCSM_CO2_PPMV=398.87    ! 2015 global mean CO2 (ppm)
+! ─────────────────────────────────────────────────────────────────────

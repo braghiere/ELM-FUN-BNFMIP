@@ -1,0 +1,44 @@
+&datm_nml
+  decomp             = "1d"
+  factorfn           = "null"
+  force_prognostic_true = .false.
+  iradsw             = 1
+  presaero           = .true.
+  restfilm           = "undefined"
+  restfils           = "undefined"
+  wiso_datm          = .false.
+/
+&shr_strdata_nml
+  datamode           = "CLMNCEP"
+  domainfile         = "<RUNROOT>/<CASEID>/run/domain.nc"
+  dtlimit            = 1.5, 1.5, 1.5, 1.5
+  fillalgo           = "nn", "nn", "nn", "nn"
+  fillmask           = "nomask", "nomask", "nomask", "nomask"
+  fillread           = "NOT_SET", "NOT_SET", "NOT_SET", "NOT_SET"
+  fillwrite          = "NOT_SET", "NOT_SET", "NOT_SET", "NOT_SET"
+  mapalgo            = "nn", "nn", "nn", "nn"
+  mapmask            = "nomask", "nomask", "nomask", "nomask"
+  mapread            = "NOT_SET", "NOT_SET", "NOT_SET", "NOT_SET"
+  mapwrite           = "NOT_SET", "NOT_SET", "NOT_SET", "NOT_SET"
+  readmode           = "single", "single", "single", "single"
+
+  ! Streams: CLM1PT climate forcing + aerosols + CO2 + topography
+  ! Format: "stream_file yr_align yr_start yr_end"
+  !
+  ! For historical 5.3 / future 5.5 (transient CO2):
+  streams  = "datm.streams.txt.CLM1PT.CLM_USRDAT <FORCING_YEAR_START> <FORCING_YEAR_START> <FORCING_YEAR_END>",
+             "datm.streams.txt.presaero.clim_2000 1 1 1",
+             "datm.streams.txt.co2tseries.20tr 1766 1766 2100",
+             "datm.streams.txt.topo.observed 1 1 1"
+  taxmode  = 'extend', 'extend', 'extend', 'extend'
+
+  ! For section 5.4 (fixed CO2 — use DATM_CO2_TSERIES=none instead):
+  ! CO2 stream is disabled via DATM_CO2_TSERIES=none in env_run.xml
+  ! streams  = "datm.streams.txt.CLM1PT.CLM_USRDAT <YR_START> <YR_START> 2100",
+  !            "datm.streams.txt.presaero.clim_2000 <YR_START> <YR_START> 2100",
+  !            "datm.streams.txt.topo.observed 1 1 1"
+  ! taxmode  = 'extend', 'extend', 'extend'
+
+  tintalgo = "nearest", "linear", "lower", "linear"
+  vectors  = "null"
+/
