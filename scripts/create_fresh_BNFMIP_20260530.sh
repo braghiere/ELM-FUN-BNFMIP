@@ -23,10 +23,10 @@
 #   acc_manaus      → NOT shared
 #   acc_ha1         → shared with acc_bon
 #
-# Submission logic:
-#   Man/Bon FUN exps: funsp (immediate, external finidat) → TR
-#   Ha1  FUN exps:    AD → ini → FN → funsp → TR
-#   nofun_baseline:   AD → ini → FN → TR
+# Submission logic (ONE shared AD→INI→FN per site):
+#   nofun_baseline (all sites):  AD → ini → FN → TR
+#   FUN exps Man/Bon:             funsp (immediate, from restart_opt) → TR
+#   FUN exps Ha1 (fun/noacc/acc): funsp (dep: nofun_ha1 FN, finidat=nofun yr751) → TR
 #
 # Usage (burst compute node, ~4-6h total):
 #   srun -A ccsi -p burst -N 1 -n 1 -t 6:00:00 --mem 32G \
@@ -446,6 +446,17 @@ for nl_file in \
 done
 echo "  Done: Bon TR gelisol + consistency check disabled"
 
+# --- Ha1 FUN experiments: funsp initialized from nofun_baseline_ha1 FN yr751 restart -----
+# ONE AD→INI→FN per site: all 3 FUN exps on Ha1 share the nofun_baseline_ha1 spinup.
+# OLMT sets funsp finidat to fun/noacc/acc's own FN (which we never run).
+# Override here to point at the nofun FN yr751 restart.
+NF_HA1_FN_RST="${RUNROOT}/nofun_baseline_ha1_${DATE}_BNF-Ha1_I1850CNPRDCTCBC/run/nofun_baseline_ha1_${DATE}_BNF-Ha1_I1850CNPRDCTCBC.clm2.r.0751-01-01-00000.nc"
+echo "── Ha1 FUN funsp: finidat → nofun_baseline_ha1 FN yr751 restart ──"
+set_nl_var "${FUN_HA1_FUNSP}/user_nl_clm"   "finidat" "'${NF_HA1_FN_RST}'"
+set_nl_var "${NOACC_HA1_FUNSP}/user_nl_clm" "finidat" "'${NF_HA1_FN_RST}'"
+set_nl_var "${ACC_HA1_FUNSP}/user_nl_clm"   "finidat" "'${NF_HA1_FN_RST}'"
+echo "  Done: Ha1 FUN funsp finidat → nofun FN yr751"
+
 echo ""
 echo "=== SECTION 3 complete: per-site customizations applied ==="
 
@@ -458,9 +469,9 @@ echo "║  SECTION 4: Submit all chains                               ║"
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 echo "  Submission legend:"
-echo "  nofun (all sites):        AD → ini → FN → TR"
-echo "  FUN exps (Ha1 only):      AD → ini → FN → funsp → TR"
-echo "  FUN exps (Man, Bon):      funsp (immediate) → TR"
+echo "  nofun (all sites):   AD → ini → FN → TR"
+echo "  FUN exps (Man, Bon): funsp (immediate, restart_opt) → TR"
+echo "  FUN exps (Ha1):      funsp (dep: nofun_ha1 FN) → TR  [shares nofun AD→FN]"
 echo ""
 
 # PBS script directories
@@ -490,6 +501,7 @@ echo "Submitting nofun_baseline_ha1 chain..."
 J=$(submit_one "nofun_ha1_AD"  "${PBS_NF_HA1}/ad_spinup_group0.pbs")
 J=$(submit_one "nofun_ha1_ini" "${PBS_NF_HA1}/iniadjust_group0.pbs" "--dependency=afterok:${J}")
 J=$(submit_one "nofun_ha1_FN"  "${PBS_NF_HA1}/fn_spinup_group0.pbs" "--dependency=afterok:${J}")
+NF_HA1_FN_JID="${J}"   # Ha1 FUN exps (fun/noacc/acc) submit their funsp after this job
 J=$(submit_one "nofun_ha1_TR"  "${PBS_NF_HA1}/transient_group0.pbs" "--dependency=afterok:${J}")
 NF_HA1_TR_JID="${J}"
 
@@ -507,13 +519,11 @@ echo "Submitting fun_transient_only_manaus chain..."
 J=$(submit_one "fun_man_funsp" "${PBS_FUN_MAN}/fun_spinup_group0.pbs")
 J=$(submit_one "fun_man_TR"    "${PBS_FUN_MAN}/transient_group0.pbs" "--dependency=afterok:${J}")
 
-# ── fun_transient_only_ha1: AD → ini → FN → funsp → TR ────────────────────
+# ── fun_transient_only_ha1: funsp (dep: nofun_ha1 FN) → TR ───────────────
+# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting fun_transient_only_ha1 chain..."
-J=$(submit_one "fun_ha1_AD"    "${PBS_FUN_HA1}/ad_spinup_group0.pbs")
-J=$(submit_one "fun_ha1_ini"   "${PBS_FUN_HA1}/iniadjust_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "fun_ha1_FN"    "${PBS_FUN_HA1}/fn_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "fun_ha1_funsp" "${PBS_FUN_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "fun_ha1_TR"    "${PBS_FUN_HA1}/transient_group0.pbs" "--dependency=afterok:${J}")
+J=$(submit_one "fun_ha1_funsp" "${PBS_FUN_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
+J=$(submit_one "fun_ha1_TR"    "${PBS_FUN_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
 
 # ── fun_transient_only_bon: funsp (now) → TR ──────────────────────────────
 # (finidat = restart_opt/bon_optimized_restart_fun_0751-01-01-00000.nc)
@@ -526,13 +536,11 @@ echo "Submitting noacc_transient_manaus chain..."
 J=$(submit_one "noacc_man_funsp" "${PBS_NOACC_MAN}/fun_spinup_group0.pbs")
 J=$(submit_one "noacc_man_TR"    "${PBS_NOACC_MAN}/transient_group0.pbs" "--dependency=afterok:${J}")
 
-# ── noacc_transient_ha1: AD → ini → FN → funsp → TR ──────────────────────
+# ── noacc_transient_ha1: funsp (dep: nofun_ha1 FN) → TR ──────────────────
+# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting noacc_transient_ha1 chain..."
-J=$(submit_one "noacc_ha1_AD"    "${PBS_NOACC_HA1}/ad_spinup_group0.pbs")
-J=$(submit_one "noacc_ha1_ini"   "${PBS_NOACC_HA1}/iniadjust_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "noacc_ha1_FN"    "${PBS_NOACC_HA1}/fn_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "noacc_ha1_funsp" "${PBS_NOACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "noacc_ha1_TR"    "${PBS_NOACC_HA1}/transient_group0.pbs" "--dependency=afterok:${J}")
+J=$(submit_one "noacc_ha1_funsp" "${PBS_NOACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
+J=$(submit_one "noacc_ha1_TR"    "${PBS_NOACC_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
 
 # ── noacc_transient_bon: funsp (now) → TR ────────────────────────────────
 echo "Submitting noacc_transient_bon chain..."
@@ -544,13 +552,11 @@ echo "Submitting acc_transient_manaus chain..."
 J=$(submit_one "acc_man_funsp" "${PBS_ACC_MAN}/fun_spinup_group0.pbs")
 J=$(submit_one "acc_man_TR"    "${PBS_ACC_MAN}/transient_group0.pbs" "--dependency=afterok:${J}")
 
-# ── acc_transient_ha1: AD → ini → FN → funsp → TR ────────────────────────
+# ── acc_transient_ha1: funsp (dep: nofun_ha1 FN) → TR ───────────────────
+# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting acc_transient_ha1 chain..."
-J=$(submit_one "acc_ha1_AD"    "${PBS_ACC_HA1}/ad_spinup_group0.pbs")
-J=$(submit_one "acc_ha1_ini"   "${PBS_ACC_HA1}/iniadjust_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "acc_ha1_FN"    "${PBS_ACC_HA1}/fn_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "acc_ha1_funsp" "${PBS_ACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${J}")
-J=$(submit_one "acc_ha1_TR"    "${PBS_ACC_HA1}/transient_group0.pbs" "--dependency=afterok:${J}")
+J=$(submit_one "acc_ha1_funsp" "${PBS_ACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
+J=$(submit_one "acc_ha1_TR"    "${PBS_ACC_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
 
 # ── acc_transient_bon: funsp (now) → TR ──────────────────────────────────
 echo "Submitting acc_transient_bon chain..."
