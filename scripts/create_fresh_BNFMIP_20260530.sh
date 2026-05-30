@@ -26,6 +26,7 @@
 # Submission logic (ONE shared AD→INI→FN per site, IDENTICAL for all 3 sites):
 #   nofun_baseline (all sites):    AD → ini → FN → TR
 #   FUN exps fun/noacc/acc (all):  funsp (dep: nofun FN, finidat=nofun yr751) → TR
+#   Fixed CO2+Ndep (all 12):       clone TR --keepexe → wrapper (dep TR) → 2015-2100
 #
 # Usage (burst compute node, ~4-6h total):
 #   srun -A ccsi -p burst -N 1 -n 1 -t 6:00:00 --mem 32G \
@@ -506,49 +507,184 @@ NF_BON_TR_JID="${J}"
 echo "Submitting fun_transient_only_manaus chain..."
 J=$(submit_one "fun_man_funsp" "${PBS_FUN_MAN}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_MAN_FN_JID}")
 J=$(submit_one "fun_man_TR"    "${PBS_FUN_MAN}/transient_group0.pbs"  "--dependency=afterok:${J}")
+FUN_MAN_TR_JID="${J}"
 
 # ── fun_transient_only_ha1: funsp (dep: nofun_ha1 FN) → TR ───────────────
-# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting fun_transient_only_ha1 chain..."
 J=$(submit_one "fun_ha1_funsp" "${PBS_FUN_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
 J=$(submit_one "fun_ha1_TR"    "${PBS_FUN_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
+FUN_HA1_TR_JID="${J}"
 
 # ── fun_transient_only_bon: funsp (dep: nofun_bon FN) → TR ──────────────
 echo "Submitting fun_transient_only_bon chain..."
 J=$(submit_one "fun_bon_funsp" "${PBS_FUN_BON}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_BON_FN_JID}")
 J=$(submit_one "fun_bon_TR"    "${PBS_FUN_BON}/transient_group0.pbs"  "--dependency=afterok:${J}")
+FUN_BON_TR_JID="${J}"
 
 # ── noacc_transient_manaus: funsp (dep: nofun_man FN) → TR ──────────────
 echo "Submitting noacc_transient_manaus chain..."
 J=$(submit_one "noacc_man_funsp" "${PBS_NOACC_MAN}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_MAN_FN_JID}")
 J=$(submit_one "noacc_man_TR"    "${PBS_NOACC_MAN}/transient_group0.pbs"  "--dependency=afterok:${J}")
+NOACC_MAN_TR_JID="${J}"
 
 # ── noacc_transient_ha1: funsp (dep: nofun_ha1 FN) → TR ──────────────────
-# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting noacc_transient_ha1 chain..."
 J=$(submit_one "noacc_ha1_funsp" "${PBS_NOACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
 J=$(submit_one "noacc_ha1_TR"    "${PBS_NOACC_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
+NOACC_HA1_TR_JID="${J}"
 
 # ── noacc_transient_bon: funsp (dep: nofun_bon FN) → TR ───────────────
 echo "Submitting noacc_transient_bon chain..."
 J=$(submit_one "noacc_bon_funsp" "${PBS_NOACC_BON}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_BON_FN_JID}")
 J=$(submit_one "noacc_bon_TR"    "${PBS_NOACC_BON}/transient_group0.pbs"  "--dependency=afterok:${J}")
+NOACC_BON_TR_JID="${J}"
 
 # ── acc_transient_manaus: funsp (dep: nofun_man FN) → TR ───────────────
 echo "Submitting acc_transient_manaus chain..."
 J=$(submit_one "acc_man_funsp" "${PBS_ACC_MAN}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_MAN_FN_JID}")
 J=$(submit_one "acc_man_TR"    "${PBS_ACC_MAN}/transient_group0.pbs"  "--dependency=afterok:${J}")
+ACC_MAN_TR_JID="${J}"
 
 # ── acc_transient_ha1: funsp (dep: nofun_ha1 FN) → TR ───────────────────
-# Shares nofun_baseline_ha1 AD→INI→FN; funsp finidat overridden in Section 3
 echo "Submitting acc_transient_ha1 chain..."
 J=$(submit_one "acc_ha1_funsp" "${PBS_ACC_HA1}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_HA1_FN_JID}")
 J=$(submit_one "acc_ha1_TR"    "${PBS_ACC_HA1}/transient_group0.pbs"  "--dependency=afterok:${J}")
+ACC_HA1_TR_JID="${J}"
 
 # ── acc_transient_bon: funsp (dep: nofun_bon FN) → TR ─────────────────
 echo "Submitting acc_transient_bon chain..."
 J=$(submit_one "acc_bon_funsp" "${PBS_ACC_BON}/fun_spinup_group0.pbs" "--dependency=afterok:${NF_BON_FN_JID}")
 J=$(submit_one "acc_bon_TR"    "${PBS_ACC_BON}/transient_group0.pbs"  "--dependency=afterok:${J}")
+ACC_BON_TR_JID="${J}"
+
+# =============================================================================
+# SECTION 5: Fixed CO2+Ndep runs (2015-2100) — 12 cases (4 exps × 3 sites)
+#
+#   Cloned from each transient case (--keepexe → shares exe).
+#   Settings:
+#     RUN_TYPE=startup, RUN_STARTDATE=2015-01-01, STOP_N=86 (2015-2100)
+#     CLM_CO2_TYPE=constant, CCSM_CO2_PPMV=397.7641 (2014 value)
+#     stream_year_{first,last}_ndep = 2014
+#     finidat = transient's 2015-01-01-00000 restart (written by transient run)
+#
+#   The transient's 2015 restart does not exist at submit time, so we submit
+#   a small SLURM wrapper (dep=afterok:transient_JID) that calls case.submit
+#   once the restart file is on disk.
+# =============================================================================
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║  SECTION 5: Fixed CO2+Ndep runs (2015-2100)                 ║"
+echo "╚══════════════════════════════════════════════════════════════╝"
+
+CREATE_CLONE=${MODEL_ROOT}/cime/scripts/create_clone
+CO2_2014=397.7641
+
+LOGDIR=${REPO}/logs/fixed_${DATE}
+mkdir -p "${LOGDIR}"
+
+# Map: <exp>_<site> → transient JID (captured in Section 4)
+declare -A TR_JIDS=(
+    [nofun_baseline_manaus]="${NF_MAN_TR_JID}"
+    [nofun_baseline_ha1]="${NF_HA1_TR_JID}"
+    [nofun_baseline_bon]="${NF_BON_TR_JID}"
+    [fun_transient_only_manaus]="${FUN_MAN_TR_JID}"
+    [fun_transient_only_ha1]="${FUN_HA1_TR_JID}"
+    [fun_transient_only_bon]="${FUN_BON_TR_JID}"
+    [noacc_transient_manaus]="${NOACC_MAN_TR_JID}"
+    [noacc_transient_ha1]="${NOACC_HA1_TR_JID}"
+    [noacc_transient_bon]="${NOACC_BON_TR_JID}"
+    [acc_transient_manaus]="${ACC_MAN_TR_JID}"
+    [acc_transient_ha1]="${ACC_HA1_TR_JID}"
+    [acc_transient_bon]="${ACC_BON_TR_JID}"
+)
+
+site_code() {
+    case "$1" in
+        manaus) echo "Man" ;; ha1) echo "Ha1" ;; bon) echo "Bon" ;;
+        *) echo "ERROR: unknown site $1" >&2; exit 1 ;;
+    esac
+}
+
+for exp in nofun_baseline fun_transient_only noacc_transient acc_transient; do
+    for site in manaus ha1 bon; do
+        code=$(site_code "${site}")
+        SRC_TR="${CASEROOT}/${exp}_${site}_${DATE}_BNF-${code}_I20TRCNPRDCTCBC"
+        FIXED_CASEID="${exp}_${site}_${DATE}_fixed_BNF-${code}_I20TRCNPRDCTCBC"
+        FIXED_CASE="${CASEROOT}/${FIXED_CASEID}"
+        TR_CASEID="${exp}_${site}_${DATE}_BNF-${code}_I20TRCNPRDCTCBC"
+        FINIDAT="${RUNROOT}/${TR_CASEID}/run/${TR_CASEID}.clm2.r.2015-01-01-00000.nc"
+        DEP_JID="${TR_JIDS[${exp}_${site}]}"
+
+        echo ""
+        echo "── fixed: ${exp} / ${site} (dep transient JID ${DEP_JID}) ──"
+
+        # Clone with --keepexe (shares transient exe — no rebuild)
+        if [[ ! -d "${FIXED_CASE}" ]]; then
+            "${CREATE_CLONE}" --case "${FIXED_CASE}" --clone "${SRC_TR}" --keepexe --silent 2>&1 | tail -3
+        else
+            echo "  Clone already exists — reusing"
+        fi
+
+        cd "${FIXED_CASE}"
+        ./xmlchange RUN_TYPE=startup
+        ./xmlchange RUN_STARTDATE=2015-01-01
+        ./xmlchange STOP_OPTION=nyears
+        ./xmlchange STOP_N=86
+        ./xmlchange REST_OPTION=nyears
+        ./xmlchange REST_N=5
+        ./xmlchange CLM_CO2_TYPE=constant
+        ./xmlchange CCSM_CO2_PPMV="${CO2_2014}"
+        ./xmlchange CONTINUE_RUN=FALSE
+
+        # finidat (will exist at run time, written by transient)
+        set_nl_var "${FIXED_CASE}/user_nl_clm" "finidat" "'${FINIDAT}'"
+
+        # Lock Ndep streams at 2014
+        set_nl_var "${FIXED_CASE}/user_nl_clm" "stream_year_first_ndep" "2014"
+        set_nl_var "${FIXED_CASE}/user_nl_clm" "stream_year_last_ndep"  "2014"
+
+        # Bon: keep gelisol surfdata + consistency override (same as transient)
+        if [[ "${site}" == "bon" ]]; then
+            set_nl_var "${FIXED_CASE}/user_nl_clm" "fsurdat" "'${GELISOL}'"
+            set_nl_var "${FIXED_CASE}/user_nl_clm" "check_finidat_fsurdat_consistency" ".false."
+        fi
+
+        # SLURM wrapper: waits for transient, then runs case.submit
+        WRAPPER="${LOGDIR}/submit_fixed_${exp}_${site}.sh"
+        cat > "${WRAPPER}" << WRAPEOF
+#!/bin/bash
+#SBATCH -J fix_${exp:0:6}_${site:0:3}
+#SBATCH -A ccsi
+#SBATCH -p batch
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH -t 00:15:00
+#SBATCH --mem=4G
+#SBATCH -o ${LOGDIR}/submit_fixed_${exp}_${site}_%j.out
+#SBATCH -e ${LOGDIR}/submit_fixed_${exp}_${site}_%j.err
+
+echo "Wrapper running at \$(date) on \$(hostname)"
+echo "Submitting fixed run: ${FIXED_CASEID}"
+
+if [[ ! -f "${FINIDAT}" ]]; then
+    echo "ERROR: finidat not found: ${FINIDAT}"
+    echo "Transient run (job ${DEP_JID}) may have failed to write the 2015 restart."
+    exit 1
+fi
+echo "finidat confirmed: ${FINIDAT}"
+
+cd "${FIXED_CASE}" && ./case.submit
+echo "Submission complete at \$(date)"
+WRAPEOF
+        chmod +x "${WRAPPER}"
+
+        WRAP_JID=$(submit_one "fixed_${exp:0:5}_${site}_wrap" "${WRAPPER}" "--dependency=afterok:${DEP_JID}")
+        echo "  fixed ${exp}/${site}: wrapper JID ${WRAP_JID} (dep transient ${DEP_JID})"
+    done
+done
+
+echo ""
+echo "=== SECTION 5 complete: 12 fixed-run wrappers submitted ==="
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
@@ -574,5 +710,9 @@ echo "        x = np.ma.compressed(d[v][:])"
 echo "        if len(x): print(f'{v}: {x[0]:.4e} {d[v].units}')"
 echo "    \""
 echo "  Expected: COST_NFIX ~7.2 gC/gN, FFIX_TO_SMINN ~2.3e-9 gN/m2/s"
+echo ""
+echo "  Fixed CO2+Ndep runs (2015-2100):"
+echo "    12 wrappers in ${LOGDIR}/  (each runs after its transient completes)"
+echo "    Fixed case prefix: <exp>_<site>_${DATE}_fixed_BNF-<Code>_I20TRCNPRDCTCBC"
 echo ""
 echo "=== create_fresh_BNFMIP_${DATE}.sh COMPLETE ==="
