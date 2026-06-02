@@ -37,6 +37,27 @@
 # =============================================================================
 set -euo pipefail
 
+# ─── Safety: refuse to run in a bare interactive terminal ────────────────────
+# A disconnected VS Code / SSH session will kill this process mid-build,
+# leaving 0 jobs submitted.  Launch with nohup or inside tmux/screen instead:
+#   nohup bash $0 > logs/create_${DATE:-20260530}_$(date +%H%M).log 2>&1 &
+#   tmux new-session "bash $0 |& tee logs/create_${DATE:-20260530}.log"
+if [[ -t 1 && -z "${TMUX:-}" && -z "${STY:-}" ]]; then
+    echo "ERROR: Do not run this script in a bare interactive terminal."
+    echo "       A killed/disconnected session will kill the script mid-build"
+    echo "       and leave zero jobs submitted (exactly what happened 2026-05-30)."
+    echo ""
+    echo "  Use nohup:"
+    echo "    mkdir -p /home/braghiere/ELM-FUN-BNFMIP/logs"
+    echo "    nohup bash $0 \\"
+    echo "        > /home/braghiere/ELM-FUN-BNFMIP/logs/create_${DATE:-20260530}_\$(date +%H%M).log 2>&1 &"
+    echo "    echo \"PID=\$!\""
+    echo ""
+    echo "  Or start a tmux session first:"
+    echo "    tmux new-session 'bash $0 |& tee logs/create_${DATE:-20260530}.log'"
+    exit 1
+fi
+
 # ─── Safety: must run on compute node ────────────────────────────────────────
 if [[ "$(hostname)" == *login* ]]; then
     echo "ERROR: This script must run on a compute node, not $(hostname)"
@@ -101,7 +122,13 @@ done
 if ls "${CASEROOT}"/*_${DATE}_* 2>/dev/null | head -1 >/dev/null 2>&1; then
     echo ""
     echo "ERROR: Cases with DATE=${DATE} already exist in ${CASEROOT}."
-    echo "       Remove them or change DATE before running this script."
+    echo "       Clean up the partial run first, then re-run the test suite:"
+    echo ""
+    echo "  rm -rf ${CASEROOT}/*_${DATE}_*"
+    echo "  rm -rf ${OLMT}/scripts/*${DATE}*"
+    echo "  rm -rf ${RUNROOT}/*${DATE}*"
+    echo ""
+    echo "  bash ${REPO}/scripts/test_create_fresh_BNFMIP_${DATE}.sh"
     exit 1
 fi
 
