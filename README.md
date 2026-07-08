@@ -27,8 +27,11 @@ Three single-point sites, four N-fixation schemes, three simulation periods:
 ## Results
 
 - **[`RESULTS.md`](RESULTS.md)** — headline table + key findings.
-- **[`notebooks/BNFMIP_results.ipynb`](notebooks/BNFMIP_results.ipynb)** — figures (renders on GitHub):
+- **[`notebooks/BNFMIP_results.ipynb`](notebooks/BNFMIP_results.ipynb)** — headline figures (renders on GitHub):
   BNF latitudinal gradient, the temperature response of BNF, GPP/NPP, and 1850–2100 time series.
+- **[`notebooks/BNFMIP_table2_gallery.ipynb`](notebooks/BNFMIP_table2_gallery.ipynb)** — **the full delivered
+  Table-2 variable set** (every C/N/P pool & flux + physical vars) exactly as sent to the coordinators,
+  plotted across all 3 sites × 4 experiments. This is what the intercomparison receives.
 
 ## Reproduce
 
