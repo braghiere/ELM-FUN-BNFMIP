@@ -24,8 +24,13 @@ __pycache__/
 # Jupyter
 .ipynb_checkpoints/
 
-# Build logs
+# Logs
 build_*.log
+*.log
+logs/
+
+# Rendered notebook exports (regenerate from .ipynb)
+*.html
 
 # Backup files
 *.bak

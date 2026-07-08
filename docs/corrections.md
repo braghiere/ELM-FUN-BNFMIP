@@ -139,6 +139,101 @@ All 12 IRCP85 (Section 5.4) cases: 4 experiments × 3 sites.
 
 ---
 
+## Correction 5 — Manaus SSP585 (§5.5) Built With Wrong PFT (Boreal Instead of Tropical)
+
+**File:** `surfdata.nc` / `surfdata.pftdyn.nc` (surface datasets)
+**Affects:** All 4 Manaus (BNF-Man) SSP585 (§5.5) cases, date stamp `20260523`
+
+### Problem
+
+All four Manaus §5.5 cases produced a **dead forest**: GPP = 0, ELAI = 0,
+TOTVEGC ≈ 0 across the entire 1850–2100 run, while soil organic matter continued
+to decompose (HR > 0, NBP strongly negative). The forest collapsed within ~12
+model years and never recovered.
+
+Root cause: the SSP585 surface datasets were built with the wrong plant
+functional type —
+
+| Dataset | Dominant PFT |
+|---------|--------------|
+| Manaus §5.3/§5.4 (working, `20260521`) | **PFT 4 — broadleaf evergreen TROPICAL tree, 100%** ✓ |
+| Manaus §5.5 (broken, `20260523`) | **PFT 2 — needleleaf evergreen BOREAL tree, 100%** ✗ |
+
+A boreal conifer placed at the equator (−2.6°) under tropical climate forcing and
+tropical-tuned parameters (oxisol CNP, `s_fix` for warm PFTs) cannot survive. The
+finidat's tropical biomass also mapped onto PFT 4, which had 0% area in the boreal
+surfdata, leaving effectively zero live biomass on the active PFT.
+
+### Diagnosis
+
+- The §5.4 fixed-CO₂ Manaus run was healthy (GPP ~3900), ruling out a
+  climate-driven collapse.
+- Bonanza Creek (genuinely boreal) did **not** collapse from the same run
+  configuration — only Manaus did, confirming a site-specific PFT/climate mismatch.
+- Confirmed by comparing `PCT_NAT_PFT` (and `PCT_SAND`/`PCT_CLAY`) between the
+  working historical run dir and the SSP585 run dir.
+
+### Fix attempts and the REAL root cause
+
+The wrong PFT was real, but fixing the surfdata/finidat did **not** revive the run.
+Extensive isolation (2026-07-07/08) showed the deeper problem: the entire
+`*_ssp585_manaus_20260523_*` **case build was defective** — it could not map the
+finidat vegetation onto the grid. Evidence:
+
+- With the SSP585 case pointed at the *byte-identical* finidat/surfdata/pftdyn/domain
+  used by the healthy §5.4 case, the run still initialized with soil loaded
+  (TOTSOMC ≈ 22 000) but **vegetation zeroed** (TOTVEGC = 1). A forest cannot lose
+  ~13 000 gC/m² in one year — so this is a load-time failure, not a die-off.
+- It failed identically with `CLM_CO2_TYPE=constant`, ruling out the CO₂/Ndep forcing.
+- The working §5.4 case (`*_manaus_20260529_fixed_*`), with the same inputs, loads
+  the forest correctly. So the defect is in the SSP585 case's own build/mapping, not
+  in any namelist setting.
+
+**Working fix:** repurpose the sound §5.4 case builds for §5.5. For each experiment,
+took the `20260529_fixed` case (RUN_STARTDATE=2015, STOP_N=86, healthy 2015 restart
+finidat) and switched CO₂/Ndep from fixed to transient SSP585:
+
+```
+CLM_CO2_TYPE = diagnostic                       # transient CO2 from DATM stream
+user_datm.streams.txt.co2tseries.20tr -> fieldInfo = fco2_datm_ssp585_1765-2100_c260519.nc
+stream_year_first_ndep = 2015 ; stream_year_last_ndep = 2100   # transient Ndep
+```
+
+This is exactly what §5.5 requires (§5.4 protocol + transient CO₂/Ndep) built from a
+known-good base. Jobs 5448900/5448924/5448925/5448926.
+
+### Verification (passed)
+
+All 4 repurposed runs initialized with the full tropical forest (VegC ≈ 13 300 at
+2015) and stayed alive through 2100 (last-decade GPP ≈ 4060–4140 gC/m²/yr, elevated
+by SSP585 CO₂ fertilization). Packaged via `package_manaus_sec55.py`.
+
+---
+
+## Correction 6 — Harvard Forest PFT (broadleaf-deciduous tropical vs temperate)
+
+**File:** `surfdata.nc` (all Harvard `BNF-Ha1` cases)
+**Status:** ACCEPTED as-is (not corrected) — documented deviation.
+
+### Issue
+
+The protocol specifies Harvard = **broadleaf deciduous temperate tree (PFT 7)**. Every
+Harvard case (all date stamps) was built with **PFT 6 = broadleaf deciduous _tropical_
+tree** at 100% (confirmed via surfdata `PCT_NAT_PFT` and the restart's
+`pfts1d_active`/`pfts1d_itypveg`). No PFT 7 Harvard spin-up exists.
+
+### Impact (why accepted)
+
+PFT 6 and PFT 7 differ in only three parameters: phenology type (stress- vs
+season-deciduous) and `flnr` (0.0716 vs 0.1007, i.e. PFT 7 has ~41 % higher Rubisco N
+→ higher Vcmax). **All four BNF temperature-response parameters (`a_fix`, `b_fix`,
+`c_fix`, `s_fix`) are identical**, so the MIP's core signal — the temperature response
+of BNF — is unaffected. Net effect: Harvard absolute GPP/NPP are biased ~10–25 % low;
+the fun/noacc/acc comparison is intact. A full PFT 7 rebuild needs a fresh multi-day
+spin-up and was deferred; delivered with this caveat.
+
+---
+
 ## Sanity Check Values (Manaus, annual mean)
 
 | Variable | Expected (corrected) | Pathological (uncorrected) |
