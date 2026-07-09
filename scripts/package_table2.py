@@ -8,7 +8,7 @@ Usage:
 """
 import os, glob, sys, numpy as np, xarray as xr
 OUTDIR='/home/braghiere/BNF_tom/delivery_table2'
-S1='/lustre/or-scratch/cades-ccsi/scratch/braghiere'
+S1='/lustre/or-scratch24/scratch/braghiere'
 S24='/lustre/or-scratch24/scratch/braghiere'
 coder=xr.coders.CFDatetimeCoder(use_cftime=True)
 
@@ -119,11 +119,10 @@ def resolve(site,exp,sec):
     hist=[f'{S1}/{stem}_20260521_{site}_I20TRCNPRDCTCBC/run']
     if sec=='53': return hist, f'{stem}_20260521_{site}_I20TRCNPRDCTCBC',1850,2014
     if sec=='54': return hist, f'{stem}_20260529_fixed_{site}_I20TRCNPRDCTCBC',2015,2100
-    # sec 55
-    if site=='BNF-Man':   # repurposed 20260529_fixed run holds §5.5
-        return hist, f'{stem}_20260529_fixed_{site}_I20TRCNPRDCTCBC',2015,2100
-    sp=f'{exp}_ssp585_{tag}_20260523_{site}_I20TRCNPRDCTCBC'
-    return [f'{S24}/{sp}/run',f'{S1}/{sp}/run'], sp,2015,2100
+    # sec 55: ALL sites use the repurposed 20260529_fixed continuation run
+    # (clean branch from the §5.3 2015 restart + transient SSP5-8.5 CO2/Ndep).
+    # This holds §5.5 data after the repurpose; §5.4 was packaged before it.
+    return hist, f'{stem}_20260529_fixed_{site}_I20TRCNPRDCTCBC',2015,2100
 
 if __name__=='__main__':
     mode=sys.argv[1] if len(sys.argv)>1 else 'all'
@@ -131,12 +130,14 @@ if __name__=='__main__':
         r=[f'{S1}/fun_transient_only_manaus_20260521_BNF-Man_I20TRCNPRDCTCBC/run']
         print(process(r,'fun_transient_only_manaus_20260529_fixed_BNF-Man_I20TRCNPRDCTCBC',2015,2100,'BNF-Man','fun_transient_only','55'))
     else:
-        skip_man54 = (mode!='man54')
+        # modes: 'all' (all sec), 'man54' (Man §5.4 only), 'sec55' (only §5.5, all sites)
+        skip_man54 = (mode not in ('man54',))
+        secs = ['55'] if mode=='sec55' else ['53','54','55']
         for site in ['BNF-Man','BNF-Ha1','BNF-Bon']:
             for exp in EXPS:
-                for sec in ['53','54','55']:
-                    if skip_man54 and site=='BNF-Man' and sec=='54':
-                        print(f'  BNF-Man/{exp}/sec54: SKIP (raw overwritten - awaiting rerun)'); continue
+                for sec in secs:
+                    if mode=='all' and skip_man54 and site=='BNF-Man' and sec=='54':
+                        print(f'  BNF-Man/{exp}/sec54: SKIP (raw overwritten)'); continue
                     if mode=='man54' and not(site=='BNF-Man' and sec=='54'): continue
                     try:
                         rundirs,pfx,y0,y1=resolve(site,exp,sec)
