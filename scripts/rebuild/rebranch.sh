@@ -4,7 +4,7 @@ echo "###### RE-BRANCH transients from spun-up r.0301 $(date) ######"
 source ~/elm_env_cades_gcc12.sh; export TMPDIR=/lustre/or-scratch24/scratch/braghiere/tmp_build TMP=$TMPDIR TEMP=$TMPDIR
 OLMT=/home/braghiere/BNF_tom/OLMT_BNF; CD=$OLMT/cime_case_dirs; RR=/lustre/or-scratch24/scratch/braghiere
 IN=/home/braghiere/BNF_tom/inputdata; MR=/home/braghiere/BNF_tom/E3SM_global_silent
-EXC="or-condo-c04,or-condo-c67,or-condo-c88,or-condo-c69,or-condo-c99,or-condo-c107,or-condo-c108,or-condo-c134,or-condo-c207,or-condo-c231,or-condo-c208"
+EXC="or-condo-c04,or-condo-c67,or-condo-c88,or-condo-c69,or-condo-c99,or-condo-c107,or-condo-c108,or-condo-c134,or-condo-c207,or-condo-c231,or-condo-c208,or-condo-c46,or-condo-c198"
 src(){ case $1 in fun)echo fun_fpg1_nfix;; noacc)[ "$2" = BNF-Man ]&&echo noACC_fixed_funp_nfix||echo noACC_temperate_funp_nfix;; acc)[ "$2" = BNF-Man ]&&echo ACC_fixed_funp_nfix||echo ACC_temperate_funp_nfix;; esac; }
 mkbr(){ # site exp pft param met surf dom pftdyn spinid cid
   local site=$1 exp=$2 pft=$3 param=$4 met=$5 surf=$6 dom=$7 pftdyn=$8 spinid=$9 cid=${10}
