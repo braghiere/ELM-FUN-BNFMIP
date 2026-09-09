@@ -1449,7 +1449,7 @@ associate(                                                                      
              !CLM5 values 
              kc_active(p,istp)   = 0.006_r8
              kn_active(p,istp)   = 0.012_r8
-           else if(ivt(p).eq.14 .or. ivt(p).eq.7 .or. ivt(p).eq.18)then
+           else if(ivt(p).eq.14 .or. ivt(p).eq.17 .or. ivt(p).eq.18)then
             !Allen et al (2020) values 
              !kc_active(p,istp)   = 0.25_r8/10._r8
              !kn_active(p,istp)   = 0.50_r8/10._r8
@@ -1954,22 +1954,22 @@ stp:  do istp = ecm_step, am_step        ! TWO STEPS
              !kc_nonmyc(ivt(p))   = 0.15_r8/10._r8
              !kn_nonmyc(ivt(p))   = 0.15_r8/10._r8 
             !CLM5 values 
-             kc_nonmyc(ivt(p))   = 0.072_r8
-             kn_nonmyc(ivt(p))   = 0.0012_r8
+             kc_nonmyc(ivt(p))   = 0.0012_r8
+             kn_nonmyc(ivt(p))   = 0.072_r8
            else if(ivt(p).eq.3)then
              !Allen et al (2020) values 
              !kc_nonmyc(ivt(p))   = 0.15_r8
              !kn_nonmyc(ivt(p))   = 0.15_r8/10._r8 
             !CLM5 values 
-             kc_nonmyc(ivt(p))   = 0.72_r8
-             kn_nonmyc(ivt(p))   = 0.0012_r8
+             kc_nonmyc(ivt(p))   = 0.0012_r8
+             kn_nonmyc(ivt(p))   = 0.72_r8
            else if(ivt(p).eq.14 .or. ivt(p).eq.17 .or. ivt(p).eq.18)then
              !Allen et al (2020) values 
              !kc_nonmyc(ivt(p))   = 0.15_r8*1._r8
              !kn_nonmyc(ivt(p))   = 0.15_r8*1._r8
              !CLM5 values 
-             kc_nonmyc(ivt(p))   = 7.2_r8
-             kn_nonmyc(ivt(p))   = 0.12_r8
+             kc_nonmyc(ivt(p))   = 0.12_r8
+             kn_nonmyc(ivt(p))   = 7.2_r8
            else  
              !Allen et al (2020) values
              !kc_nonmyc(ivt(p))   = 0.15_r8
@@ -1977,8 +1977,8 @@ stp:  do istp = ecm_step, am_step        ! TWO STEPS
              !kc_nonmyc(ivt(p))   = 0.01_r8
              !kn_nonmyc(ivt(p))   = 0.90_r8
              !CLM5 values 
-             kc_nonmyc(ivt(p))   = 0.72_r8
-             kn_nonmyc(ivt(p))   = 0.012_r8
+             kc_nonmyc(ivt(p))   = 0.012_r8
+             kn_nonmyc(ivt(p))   = 0.72_r8
            end if
 
                costNit(j,icostnonmyc_no3)   = fun_cost_nonmyc(sminn_no3_layer_step(p,j,istp) &
