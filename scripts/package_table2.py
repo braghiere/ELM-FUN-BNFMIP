@@ -16,6 +16,10 @@ coder=xr.coders.CFDatetimeCoder(use_cftime=True)
 VMAP={
  'TSOI':['TSOI'],'TSOIBNF':['TSOI_10CM'],'ELAI':['ELAI'],'H2OSOI':['H2OSOI'],'TVEG':['QVEGT'],
  'GPP':['GPP'],'AR':['AR'],'HR':['HR'],'NPP':['NPP'],
+ 'NPP_NUPTAKE':['NPP_NUPTAKE'],'NPP_PUPTAKE':['NPP_PUPTAKE'],
+ 'NPP_NACTIVE':['NPP_NACTIVE'],'NPP_NFIX':['NPP_NFIX'],
+ 'NUPTAKE_NPP_FRACTION':['NUPTAKE_NPP_FRACTION'],'PUPTAKE_NPP_FRACTION':['PUPTAKE_NPP_FRACTION'],
+ 'COST_NFIX':['COST_NFIX'],'COST_NACTIVE':['COST_NACTIVE'],'COST_PACTIVE':['COST_PACTIVE'],
  'VEGC_TO_LITTER':['LITFALL'],'LITC_TO_SOIL':['LITTERC_TO_SOILC'],
  'SNFIX':['NFIX_TO_SMINN'],'FNFIX':['FFIX_TO_SMINN'],
  'NGAS':['DENIT'],'NLEACH':['SMIN_NO3_LEACHED','SMINN_LEACHED'],'NNETMIN':['NET_NMIN'],
@@ -31,13 +35,16 @@ VMAP={
  'SOILP':['TOTSOMP'],'LEAFP':['LEAFP'],'WOODP':['DEADSTEMP','WOODP'],'FROOTP':['FROOTP'],
  'CWDP':['CWDP'],'TOTSOMP':['TOTSOMP'],
 }
-C_FLUX={'GPP','AR','HR','NPP','VEGC_TO_LITTER','LITC_TO_SOIL'}
+C_FLUX={'GPP','AR','HR','NPP','NPP_NUPTAKE','NPP_PUPTAKE','NPP_NACTIVE','NPP_NFIX','VEGC_TO_LITTER','LITC_TO_SOIL'}
 N_FLUX={'SNFIX','FNFIX','TNFIX','NGAS','NLEACH','NNETMIN','NUP','FN2O'}
 P_FLUX={'PLOSS','PNETMIN','PUP'}
 W_FLUX={'TVEG','ET'}
 POOLC={'TOTVEGC','TOTECOC','VEGCAG','VEGCBG','TOTLITC','SOILC','LEAFC','WOODC','TOTROOTC','CROOTC','FROOTC','CWDC'}
 POOLN={'TOTVEGN','TOTECON','SMINN','TOTLITN','SOILN','LEAFN','WOODN','FROOTN','CWDN','TOTSOMN'}
 POOLP={'TOTVEGP','TOTECOP','SMINP','TOTLITP','SOILP','LEAFP','WOODP','FROOTP','CWDP','TOTSOMP'}
+FRAC={'NUPTAKE_NPP_FRACTION','PUPTAKE_NPP_FRACTION'}   # dimensionless, no scaling
+COSTN={'COST_NFIX','COST_NACTIVE'}                     # gN/gC, no scaling
+COSTP={'COST_PACTIVE'}                                 # gP/gC, no scaling
 
 def pick(ds,cands):
     for c in cands:
@@ -89,6 +96,7 @@ def process(rundirs,pfx,y0,y1,site,exp,sec):
         d=dict(lst); stk=[d[y] for y in years if y in d]
         if not stk: continue
         a=np.concatenate([s.reshape(12,-1) for s in stk],axis=0)
+        a=np.where(np.abs(a)>1e30,np.nan,a)            # mask model spval fill (diagnostics w/o _FillValue)
         if k in C_FLUX|N_FLUX|P_FLUX: a*=86.4          # g/m2/s -> kg/m2/day
         elif k in W_FLUX: a*=86400.0                    # mm/s -> kg/m2/day
         elif k in POOLC|POOLN|POOLP: a*=1e-3            # g/m2 -> kg/m2
@@ -99,7 +107,8 @@ def process(rundirs,pfx,y0,y1,site,exp,sec):
         uu=('kgC/m2/day' if k in C_FLUX else 'kgN/m2/day' if k in N_FLUX else 'kgP/m2/day'
             if k in P_FLUX else 'kgH2O/m2/day' if k in W_FLUX else 'kgC/m2' if k in POOLC
             else 'kgN/m2' if k in POOLN else 'kgP/m2' if k in POOLP
-            else 'K' if k in ('TSOI','TSOIBNF') else 'm2/m2' if k=='ELAI' else 'kgH2O/m2' if k=='H2OSOI' else '')
+            else 'K' if k in ('TSOI','TSOIBNF') else 'm2/m2' if k=='ELAI' else 'kgH2O/m2' if k=='H2OSOI'
+            else '-' if k in FRAC else 'gN/gC' if k in COSTN else 'gP/gC' if k in COSTP else '')
         out[k].attrs['units']=uu
     out.attrs.update({'title':f'ELM-FUN BNFMIP Table-2 {site} {exp} sec{sec}','site':site,
       'experiment':exp,'section':f'5.{sec[-1]}','contact':'renatob@caltech.edu',
