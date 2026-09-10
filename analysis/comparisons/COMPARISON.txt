@@ -1,0 +1,31 @@
+ELM-FUN corrected reruns — pathway partitioning (present-day 2005-2014, % of NUPTAKE)
+BEFORE = pre-fix (buggy); AFTER = corrected. Manaus & Harvard, FUN(Houlton).
+
+Manaus (fun):
+   myc      BEFORE   3.5%  ->  AFTER  61.6%   (Δ +58.1)
+   nonmyc   BEFORE  68.4%  ->  AFTER   1.7%   (Δ -66.7)
+   fix      BEFORE  11.7%  ->  AFTER  20.1%   (Δ +8.4)
+   retrans  BEFORE  16.4%  ->  AFTER  16.5%   (Δ +0.1)
+
+Harvard (fun):
+   myc      BEFORE   3.2%  ->  AFTER  63.3%   (Δ +60.1)
+   nonmyc   BEFORE  65.5%  ->  AFTER   1.1%   (Δ -64.4)
+   fix      BEFORE  17.0%  ->  AFTER  21.2%   (Δ +4.2)
+   retrans  BEFORE  14.2%  ->  AFTER  14.4%   (Δ +0.2)
+
+Key fluxes present-day, OLD(delivered) vs NEW(corrected), FUN_Houlton (units as in CSV):
+ Manaus:
+   GPP          old=0.009535  new=0.009535  (+0%)
+   NPP          old=0.002428  new=0.002427  (-0%)
+   SNFIX        old=7.239e-06  new=1.24e-05  (+71%)
+   NUP          old=6.207e-05  new=6.164e-05  (-1%)
+   NPP_NUPTAKE  old=1.196e-05  new=3.511e-05  (+194%)
+   NPP_PUPTAKE  old=6.96e-05  new=6.96e-05  (-0%)
+
+ Harvard:
+   GPP          old=0.003763  new=0.003764  (+0%)
+   NPP          old=0.001383  new=0.001382  (-0%)
+   SNFIX        old=4.893e-06  new=6.031e-06  (+23%)
+   NUP          old=2.875e-05  new=2.846e-05  (-1%)
+   NPP_NUPTAKE  old=7.851e-06  new=2.707e-05  (+245%)
+   NPP_PUPTAKE  old=7.079e-05  new=7.079e-05  (+0%)
