@@ -1,21 +1,37 @@
 # s_fix decision: physical value (-6), do not retune — evidence summary (2026-09)
 
 After fixing the inherited FUN N-cost defects (see docs/FUN_PARAMETER_AUDIT.md), symbiotic BNF
-changed and the pre-existing `s_fix` tuning had to be re-evaluated. Three runs were compared
-(all: corrected pathway code; differ only in the symbiotic-fixation cost scalar `s_fix`):
+changed and the pre-existing `s_fix` tuning had to be re-evaluated. NOTE the OLD->v3 sequence is
+NOT single-variable: OLD (buggy code + tuned s_fix), v2 (corrected pathways + tuned s_fix),
+v3 (corrected pathways + s_fix=-6). OLD->v2 changes competing pathway costs; v2->v3 changes the
+scalar. The two move symbiotic fixation in OPPOSITE directions (see decomposition below).
 
-| run | folder | s_fix | fixation cost (gC/gN) |
-|-----|--------|------:|----------------------:|
-| OLD (delivered, buggy code) | data_csv_corrected/ | -0.1 | 0.12-0.18 |
-| v2 (fixed code, tuned s_fix) | data_csv_corrected_v2/ | -0.1 | 0.12-0.18 |
-| **v3 (fixed code, physical s_fix)** | **data_csv_sfixorig/** | **-6** | **7.2-10.6** |
+Realized fixation cost = flux-integrated ΣNPP_NFIX / ΣSNFIX over the window (NOT 1/mean(COST_NFIX),
+which over-states it; and NOT the raw COST_NFIX diagnostic, which is gN/gC — see docs/corrections.md):
 
-## Verdict: v3 (s_fix = -6). Do NOT tune s_fix up.
-`-6` is the CLM5/CLM6 default and the physically-nominal cost (Houlton 2008 / Fisher 2010:
-7.5-12.5 gC/gN; Menge 2026 obs ~5). `-0.1`/`-1` charge 0.1-1 gC/gN, below every observation.
+| run | folder | s_fix | realized cost (gC/gN), Manaus |
+|-----|--------|------:|------------------------------:|
+| OLD (delivered, buggy code) | data_csv_corrected/ | -0.1 | 0.10-0.16 |
+| v2 (fixed code, tuned s_fix) | data_csv_corrected_v2/ | -0.1 | 0.10-0.16 |
+| **v3 (fixed code, physical s_fix)** | **data_csv_sfixorig/** | **-6** | **6.15-10.0** |
 
-Three independent lines agree on v3:
-1. **Cost physics** (analysis/figs/sfix_cost_physics.png): only s_fix=-6 reaches 7.5-12.5 gC/gN.
+v3 realized (Manaus, ΣNPP_NFIX/ΣSNFIX): Bytnerowicz noAcc 6.15/6.24, Acc 6.82/6.28,
+Houlton 7.54/10.00 (present 2005-2014 / future 2090-2099). Houlton rises under warming because
+Manaus soil (TSOIBNF ~31->36 C) is ABOVE the Houlton cost-optimum (25.15 C).
+
+## Verdict: v3 (s_fix = -6) is a defensible physical REFERENCE — not a unique calibration.
+`-6` is the CLM5/CLM6 default. v3's realized cost (6.15-10.0 gC/gN) is physiologically plausible:
+at/above Menge et al. 2026's synthesis central of ~5 (range 4-6; note Menge flags a glucose-vs-carbon
+mis-citation that lowers Fisher 2010's 7.5-12.5), and overlapping the lower Fisher range. The tuned
+`-0.1`/`-1` charge 0.10-0.16 gC/gN, an order of magnitude below any synthesis. `-6` is retained as a
+reference; it has NOT been uniquely calibrated or site-validated. Do not present the cost/partition/
+magnitude figures as three independent validations — they are coupled outputs of the same system.
+
+Supporting lines (each with caveats, none a validation):
+1. **Cost physics**: the EXECUTED Houlton cost function ((-s_fix)/(1.25*exp(a+b*T*(1-0.5T/c))),
+   a=-3.62,b=0.27,c=25.15) gives 6.01@25C, 7.22@31C, ~11@36C for s_fix=-6, reproducing the realized
+   costs above. NOTE the old analysis/figs/sfix_cost_physics.png plotted the paramfile "-2" form
+   (superseded by the executed L3171 form) and must be rebuilt from the executed function.
 2. **Pathway partitioning** (analysis/figs/pathways_across_runs.png): v3 mycorrhizal ~80% of N
    uptake (obs ~80%, van der Heijden 2015; Braghiere 2022 78%); v2 inflates fixation to 20%,
    dragging mycorrhizae to 62%; OLD is backwards (myc 3.5%, non-myc 68%).
@@ -28,7 +44,9 @@ Three independent lines agree on v3:
 
 ## Key literature (2026 authoritative synthesis)
 - Reis et al. 2025 (Nature, 10.1038/s41586-025-09201-w): global natural BNF 65 (52-77) Tg N/yr,
-  ~half of Cleveland 1999 (195); Cleveland ET/NPP slopes ~2x too high.
+  ~one-third of the older Cleveland 1999 (195) estimate (65/195 = 0.33). Downward revision
+  attributed largely to abundance-aware extrapolation (N-fixers over-represented in sampled
+  sites). NB: a global budget constrains totals, not any single site's future curve.
 - Sullivan et al. 2014 (PNAS, 10.1073/pnas.1320646111): mature Amazon SYMBIOTIC BNF ~0.02
   gN/m2/yr (0.1-0.5 kgN/ha/yr), 30-100x below regression estimates; total free-living-dominated.
 - DeLuca et al. 2002 (Nature): boreal upland symbiotic ~0; N input is feather-moss cyanobacteria

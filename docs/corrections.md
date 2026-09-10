@@ -90,9 +90,21 @@ real(r8), parameter :: freelivfix_slope = 0.5e-4_r8
 
 ### Problem
 
-`s_fix = -0.1` produced a near-flat, very cheap N fixation cost curve, giving
-`COST_NFIX ≈ 0.12 gC gN⁻¹` at Manaus (~31°C). Observed values are typically
-6–12 gC gN⁻¹. This caused runaway N fixation and unrealistically high GPP/NPP.
+`s_fix = -0.1` produced a near-flat, very cheap N fixation cost curve. The FUN
+cost *equation* gives ≈ 0.12 gC gN⁻¹ at Manaus (~31°C) for this scalar, and the
+flux-integrated realized cost ΣNPP_NFIX / ΣSNFIX ≈ 0.10–0.16 gC gN⁻¹ confirms it.
+Synthesis/observational costs are ≈ 5 gC gN⁻¹ (Menge et al. 2026; 4–6 range) up
+to the older FUN nominal 7.5–12.5 (Fisher et al. 2010). This cheap cost caused
+runaway N fixation and unrealistically high GPP/NPP.
+
+> **Units note (verified 2026-09, commit-tracked):** the model's `COST_NFIX`
+> *diagnostic* is stored as an efficiency in **gN gC⁻¹** — source: `cost_nfix =
+> Nfix/npp_Nfix`, set to 0 when expenditure is 0 — i.e. the **reciprocal** of the
+> gC gN⁻¹ costs quoted in this section. Do **not** read the raw `COST_NFIX` value
+> as gC gN⁻¹, and do **not** take 1/mean(`COST_NFIX`) as the realized cost (that
+> over-states it via harmonic/zero-inflation averaging). The realized carbon cost
+> is **ΣNPP_NFIX / ΣSNFIX** integrated over a window. The 0.12 / 7.2 numbers here
+> are *cost-equation* values (correct as gC gN⁻¹), not the diagnostic variable.
 
 ### Fix
 
@@ -103,7 +115,12 @@ Updated parameter file with biome-aware `s_fix`:
 Parameter file used: `clm_params_fun3_sfix1_cold_pft.nc` (for cold-PFT experiments)
 and `clm_params_fun3_sfix6_manaus_tuned.nc` / `clm_params_fun3_sfix6.nc`
 
-**Expected post-fix value at Manaus (~31°C):** `COST_NFIX ≈ 7.2 gC gN⁻¹`
+**Post-fix cost-*equation* value at Manaus (~31°C):** ≈ 7.2 gC gN⁻¹ (s_fix = −6).
+**Flux-integrated realized cost (v3):** ≈ 6–10 gC gN⁻¹ across schemes/windows —
+Bytnerowicz ~6.2; Houlton 7.5 (present) → 10.0 (future 2090s) as Manaus soil warms
+from ~31 to ~36°C, *past* the 25.15°C cost-optimum, so the Houlton cost rises with
+warming. This is a defensible physical **reference**, not a unique calibration
+(cf. Menge et al. 2026 central ~5 gC gN⁻¹).
 
 ---
 
@@ -238,7 +255,8 @@ spin-up and was deferred; delivered with this caveat.
 
 | Variable | Expected (corrected) | Pathological (uncorrected) |
 |----------|---------------------|---------------------------|
-| `COST_NFIX` | ~7.2 gC gN⁻¹ | ~0.12 gC gN⁻¹ |
+| Realized fix cost ΣNPP_NFIX/ΣSNFIX | ~6–10 gC gN⁻¹ | ~0.10–0.16 gC gN⁻¹ |
+| `COST_NFIX` raw diagnostic (gN gC⁻¹ = 1/cost) | ~0.06–0.16 | ~3.6 |
 | `FFIX_TO_SMINN` | ~2.3×10⁻⁹ gN m⁻² s⁻¹ (~72 mgN m⁻² yr⁻¹) | ~2.3×10⁻⁸ (~718 mgN m⁻² yr⁻¹) |
 | `NFIX_TO_SMINN` | growing over spinup years | near zero throughout |
 | `SMINN` | declining from ~5.7 toward ~0.5 gN m⁻² | stuck at ~5.7 gN m⁻² |
