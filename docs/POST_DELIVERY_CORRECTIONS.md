@@ -80,13 +80,16 @@ Figure: [sfix_sweep_brackets_panel.png](../analysis/figs/sfix_sweep_brackets_pan
 "Same FUN code" only means the same fixation-cost *subroutine*. The fixation *flux* is an
 **emergent** outcome of an optimization (buy N from the cheapest source until demand is met), so
 it depends on (a) fixation cost, (b) the cost of **every competing pathway**, and (c) how
-**N-limited** the ecosystem is. Evidence: **ELM's own** Manaus symbiotic BNF spans ~2 → ~26
-kg/ha just by flipping s_fix (−6 → −0.1), bracketing essentially the whole intermodel panel
-(~20–45). ELM ≠ CLM5 in the surrounding machinery (ELM runs **FUN-P** phosphorus co-limitation;
-different soil BGC/mineralization; the #2120 params; spinup). So the intermodel spread is
-plausibly an **emergent-property difference (N/P limitation + parameterization within a shared
-FUN framework), not an algorithmic one** — a hypothesis to test with each model's config, not a
-verdict.
+**N-limited** the ecosystem is. Evidence: **ELM's own** Manaus symbiotic BNF (future 2090s)
+spans ~1.2 (corrected: bugs fixed + physical cost) → ~46–51 (v2: bugs fixed + cheap cost) →
+~17–26 (delivered: buggy + cheap cost) — an **order-of-magnitude sensitivity to configuration**,
+where the pathway-bug fix *raises* fixation and the physical scalar *lowers* it (opposite
+directions; see [sfix_sweep_brackets_panel.png](../analysis/figs/sfix_sweep_brackets_panel.png)).
+ELM ≠ CLM5 in the surrounding machinery too (ELM runs **FUN-P** phosphorus co-limitation;
+different soil BGC/mineralization; the #2120 params; spinup). **What this shows:** the flux is set
+by fixation cost *and* competing N-acquisition pathways, so both need examination. **What it does
+NOT show:** it does not identify the cause of the intermodel spread or rule out implementation
+differences — that needs each model's config (a hypothesis to test, not a verdict).
 
 ---
 
@@ -120,8 +123,8 @@ declare a model winner.** Four reasons the strong claim fails:
 ### Observational context (leads, several still need primary verification)
 | site | relevant studies | rough magnitude | status |
 |---|---|---|---|
-| Manaus (mature tropical) | Sullivan 2014 (symbiotic); Cusack 2009 (indirect); terra-firme oxisol root-assoc. | symbiotic low (~0.2); total free-living-dominated (~2–15) | Sullivan value unverified for this stand/scale |
-| Bonanza (boreal upland) | DeLuca 2002 (feather moss 1.5–2.0); Ruess (alder ~6.6, different niche) | free-living ~2; vascular symbiotic ~0 in mature black spruce | niche-dependent; ELM total consistent, not validated |
+| Manaus (mature tropical) | Sullivan 2014; Cleveland et al. 2010 (indirect, Rondônia) | symbiotic estimates span a **wide range**: ~0.2 (Sullivan) to ~4.5–6.8 (Cleveland 2010). ELM corrected ~1.5–2.1 sits **within** it | methods/scale/location differ; no single benchmark verified for this stand |
+| Bonanza (boreal upland) | DeLuca 2002 (feather moss 1.5–2.0); alder chronosequence (different niche) | feather-moss free-living ~1.5–2; ELM total ~2.1 | DeLuca does **not** establish zero vascular symbiotic fixation; ELM's upland column does not represent alder; consistent, not validated |
 | Harvard (temperate) | no site BNF measurement (record is N-deposition); temperate BNF spans orders of magnitude | essentially unconstrained | cannot adjudicate |
 
 ### Honest assessment (do not overstate in the manuscript)
@@ -177,8 +180,12 @@ Verification status noted where a value/claim still needs primary confirmation.
   substantial human alteration of the tropical N cycle. *PNAS* 111, 8101–8106.
   doi:10.1073/pnas.1320646111. *(Quoted ~0.2 kg N/ha/yr symbiotic; sampling scope/scale for the
   modeled Manaus stand UNVERIFIED here.)*
-- Cusack, D.F., et al. (2009). Using indirect methods to constrain symbiotic N fixation rates: a
-  case study from an Amazonian rain forest. *Biogeochemistry*. doi:10.1007/s10533-009-9392-y.
+- Cleveland, C.C., Houlton, B.Z., Neill, C., Reed, S.C., Townsend, A.R., Wang, Y. (2010). Using
+  indirect methods to constrain symbiotic N fixation rates: a case study from an Amazonian rain
+  forest. *Biogeochemistry*. doi:10.1007/s10533-009-9392-y. *(Estimates symbiotic BNF ~4.5 kg
+  N/ha/yr by mass balance and ~6.8 by modeling, Rondônia — substantially HIGHER than Sullivan's
+  ~0.2. Amazon symbiotic estimates therefore span a wide range, not a single low value. Earlier
+  drafts misattributed this as "Cusack 2009" and as corroborating the low value — corrected.)*
 - DeLuca, T.H., et al. (2002). Quantifying nitrogen-fixation in feather moss carpets of boreal
   forests. *Nature* 419, 917–920. doi:10.1038/nature01051. *(Feather-moss niche ~1.5–2.0 kg
   N/ha/yr; does not establish zero vascular symbiotic fixation.)*

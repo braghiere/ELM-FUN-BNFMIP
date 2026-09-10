@@ -38,8 +38,15 @@ SOILTEMP30 accumulator", but the code on the next line uses `soila10` (**10-day*
 averaging window (10 vs 30 day) should be confirmed.
 
 ## Recommended resolution (before calling ACC/noAcc a clean acclimation result)
-Either (a) feed all three schemes the *same* temperature input (either all per-layer instantaneous
-`tc_soisno(c,j)`, or all the same running-mean), so the contrast isolates the formulation; or
-(b) keep as-is but document the confound explicitly in the manuscript methods and confine
-acclimation claims to what the design can support. Resolving this outranks any further
-observational comparison.
+Do **not** simply force identical temperature inputs — acclimation and the instantaneous reaction
+rate may *legitimately* use different temperatures. Acclimation of Topt/Tmin is expected to track a
+running-mean (growth) temperature, whereas the instantaneous fixation *reaction rate* should be
+evaluated at instantaneous T. The real issue is that the ACC routine currently uses the 10-day mean
+`tc_soila10` for the **whole** calculation (both the acclimated optimum **and** the reaction
+evaluation), while noAcc/Houlton evaluate the reaction at instantaneous `tc_soisno(c,j)`.
+
+Resolution: confirm with the scheme designer (Tom / Bytnerowicz) the **intended temperature roles**
+— which temperature should control *acclimation*, and which should evaluate *fixation activity* —
+then make the ACC↔noAcc comparison consistent for whatever is being isolated (and pin down the
+10- vs 30-day window). Until then, present noAcc-vs-Houlton as the clean contrast and treat the ACC
+arm's temperature basis as provisional. Resolving this outranks further observational comparison.
