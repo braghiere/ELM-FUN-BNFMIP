@@ -65,9 +65,17 @@ git clone git@github.com:braghiere/ELM-FUN-BNFMIP.git
 
 ## Scientific corrections
 
-Six corrections were applied and are documented in **[`docs/corrections.md`](docs/corrections.md)**
+Six pre-delivery corrections are documented in **[`docs/corrections.md`](docs/corrections.md)**
 (P double-limitation, free-living fixation rate, `s_fix` cost, §5.4 Ndep locking,
 the Manaus §5.5 case-build fix, and the Harvard PFT caveat).
+
+**Post-delivery (2026-09):** two inherited FUN code bugs were found and fixed, the cheap-cost
+`s_fix` tuning was reverted to a physical value, and the results were re-evaluated. The full
+step-by-step story — bugs → retuning reversal → corrected results → literature evaluation →
+open issues — is in **[`docs/POST_DELIVERY_CORRECTIONS.md`](docs/POST_DELIVERY_CORRECTIONS.md)**
+(with [FUN_PARAMETER_AUDIT](docs/FUN_PARAMETER_AUDIT.md), [SFIX_DECISION](docs/SFIX_DECISION.md),
+and [ACC_TEMPERATURE_CONFOUND](docs/ACC_TEMPERATURE_CONFOUND.md)). Note: the headline table below
+reflects the **delivered** runs and predates these corrections.
 
 ## Requirements
 
