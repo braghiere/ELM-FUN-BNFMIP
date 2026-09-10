@@ -129,7 +129,7 @@ declare a model winner** — and there is genuine counterevidence. Five reasons 
 ### Observational context (leads, several still need primary verification)
 | site | relevant studies | rough magnitude | status |
 |---|---|---|---|
-| Manaus (mature tropical) | Cleveland 2010 (Rondônia); Barron 2011; Sullivan 2014 (Costa Rica field); **counter:** Brookshire 2019 (Trinidad old-growth) | symbiotic estimates span a **very wide range**: ~0.2 (Sullivan, Costa Rica) → ~4.5–6.8 (Cleveland, Rondônia) → ~4–24 (Brookshire, legume-rich Trinidad old-growth). ELM corrected ~1.5–2.1 is at the **low end** | **no Manaus measurement**; location/niche/method differ; mature tropical is NOT universally low |
+| Manaus (mature tropical) | Cleveland 2010 (Rondônia); Barron 2011; Sullivan 2014 (Costa Rica); **counter:** Brookshire 2019 (Trinidad old-growth) | tropical symbiotic estimates span a **very wide range**: Cleveland ~4.5–6.8 (Rondônia); Sullivan (Costa Rica) *total* BNF ~1.2 (primary) / ~5.7 (gap-adjusted), corrections unaudited; Brookshire ~4–24 (Trinidad old-growth). ELM corrected symbiotic ~1.5–2.1 is at/below the low end | **no Manaus measurement**; location/niche/method differ; **do not quote a single "0.2" benchmark** |
 | Bonanza (boreal upland) | DeLuca 2002 (feather moss 1.5–2.0); alder chronosequence (different niche) | feather-moss free-living ~1.5–2; ELM total ~2.1 | DeLuca does **not** establish zero vascular symbiotic fixation; ELM's upland column does not represent alder; consistent, not validated |
 | Harvard (temperate) | no site BNF measurement (record is N-deposition); temperate BNF spans orders of magnitude | essentially unconstrained | cannot adjudicate |
 
@@ -173,69 +173,114 @@ observational comparison.
 ---
 
 ## References
-Verification status noted where a value/claim still needs primary confirmation.
+Verification status is noted per entry. "Primary text checked" = confirmed against the article;
+"abstract/record checked" = confirmed identity + headline result; "unverified" = numeric value
+still a gap in this audit. **Do not mix quantity types** (leaf-N stocks vs nodule-specific rates
+vs annual ecosystem fluxes) on the same axis.
 
 **FUN / cost framework**
-- Fisher, J.B., et al. (2010). Carbon cost of plant nitrogen acquisition: a mechanistic, globally
-  applicable model of plant N uptake, retranslocation, and fixation. *Global Biogeochem. Cycles*
-  24, GB1014.
-- Menge, D.N.L., et al. (2026). Global Carbon Investment in Terrestrial Biological Nitrogen
-  Fixation. *Global Biogeochem. Cycles* 40, e2026GB009098. doi:10.1029/2026GB009098. *(0.29%
-  investment depends on assumed BNF and cost — not an independent validation.)*
+- Fisher, J.B., et al. (2010). Carbon cost of plant nitrogen acquisition. *Global Biogeochem.
+  Cycles* 24, GB1014. **doi:10.1029/2009GB003621**. *(Model-framework reference; a nominal cost
+  temperature response, not a universal physiological calibration.)*
+- Menge, D.N.L., et al. (2026). Global Carbon Investment in Terrestrial BNF. *Global Biogeochem.
+  Cycles* 40, e2026GB009098. doi:10.1029/2026GB009098. *Primary cost section checked.* *(Flags a
+  unit issue: Gutschick's 8–12 g glucose/gN = 3.2–4.8 gC/gN. Synthesis avg ~3–6; models often use
+  6–14; adopts **5 (4–6)** — a synthesis choice, not a measured SD. So ELM's 6–10 is much more
+  credible than 0.1–0.16 but sits toward/above the synthesis range. 0.29% NPP investment uses
+  assumed cost — not independent validation of ELM.)*
 
-**Site / niche observations — support for lower fixation**
-- Cleveland, C.C., Houlton, B.Z., Neill, C., Reed, S.C., Townsend, A.R., Wang, Y. (2010). Using
-  indirect methods to constrain symbiotic N fixation rates: a case study from an Amazonian rain
-  forest. *Biogeochemistry*. doi:10.1007/s10533-009-9392-y. *(Symbiotic BNF ~4.5 kg N/ha/yr by
-  mass balance, ~6.8 by modeling, Rondônia — LOWER than old extrapolations but well ABOVE 0.2.
-  Earlier drafts misattributed this as "Cusack 2009" and as corroborating a low value — corrected.)*
-- Barron, A.R., et al. (2011). *(Canopy legumes in mature, N-rich tropical forest show near-zero
-  fixation, with substantial fixation in disturbed forest/gaps.)* Supports the *plausibility of the
-  downregulation mechanism*, not a Manaus magnitude. Needs primary confirmation.
-- Sullivan, B.W., et al. (2014). *PNAS* 111, 8101–8106. doi:10.1073/pnas.1320646111. **Correction:**
-  doi:10.1073/pnas.1511978112. *(Multi-site tropical study; the FIELD component is in Costa Rica
-  (Piro), NOT Amazonia. Do NOT cite as "measured mature Amazon ~0.2"; a published correction
-  exists and the exact quoted value still needs re-checking.)*
-- DeLuca, T.H., et al. (2002). Quantifying nitrogen-fixation in feather moss carpets of boreal
-  forests. *Nature* 419, 917–920. doi:10.1038/nature01051. *(Feather-moss niche ~1.5–2.0 kg
-  N/ha/yr — exact passage unverified here; does NOT establish zero vascular symbiotic fixation.)*
-
-**Site / niche observations — counterevidence (mature tropical is NOT universally near-zero)**
+**Tropical field evidence — heterogeneous (support AND counter for "low")**
+- Cleveland, C.C., Houlton, B.Z., Neill, C., Reed, S.C., Townsend, A.R., Wang, Y. (2010).
+  *Biogeochemistry* 99, 1–13. doi:10.1007/s10533-009-9392-y. *Full text checked.* *(Symbiotic
+  ~6.8 (model) / ~4.5 (N-balance) kg N/ha/yr, representative forest from central Rondônia; the
+  model **assumes a 10 gC/gN fixation cost**. Lower than old extrapolations, NOT ~0.2. Earlier
+  drafts misattributed this as "Cusack 2009" — corrected.)*
+- Barron, A.R., Purves, D.W., Hedin, L.O. (2011). Facultative N fixation by canopy legumes in a
+  lowland tropical forest. *Oecologia* 165, 511–520. *Abstract checked.* *(Near-zero fixation in
+  mature N-rich forest; substantial in disturbed forest/gaps. Supports the *plausibility* of the
+  downregulation mechanism — sampled trees/habitats, not an annual stand budget.)*
+- Sullivan, B.W., et al. (2014). *PNAS* 111, 8101–8106. doi:10.1073/pnas.1320646111. Corrections:
+  PMC4517255, PMC4522799 *(located; content not retrieved)*. *Indexed primary text checked.*
+  *(Field sites are **Costa Rican, not Amazonian**. Original text: **total** BNF ~1.2 kg N/ha/yr
+  undisturbed primary, ~5.7 after a gap-dynamics adjustment. **Do NOT quote "0.2"** — value +
+  correction status unresolved. Useful point: spatial coverage & disturbance matter greatly.)*
 - Brookshire, E.N.J., et al. (2019). Symbiotic N fixation is sufficient to support net aboveground
-  biomass accumulation in a humid tropical forest. *Scientific Reports* 9. doi:10.1038/s41598-019-43962-5.
-  *(Legume-rich Trinidad forests INCLUDING an old-growth stand: plot-level symbiotic ~11.3, range
-  4.1–24.2 kg N/ha/yr per the review. Direct counter to "mature tropical ⇒ near-zero." Not Manaus.)*
-- Menge, D.N.L., et al. (2023). *(All six studied tree symbioses SUSTAINED fixation after multiyear
-  N additions relieved N limitation.)* Challenges the FUN premise that "soil N available ⇒ fixation
-  shuts down" as a general biological rule. Needs primary confirmation.
-- Cunha, H.F.V., et al. (2022). *(Old-growth central-Amazon fertilization: productivity responds to
-  P addition.)* Supports examining P co-limitation in the comparison; does not validate ELM's BNF.
+  biomass accumulation in a humid tropical forest. *Scientific Reports* 9, 7571.
+  doi:10.1038/s41598-019-43962-5. *Full text checked.* *(Legume-rich Trinidad, incl. an old-growth
+  stand: plot-mean symbiotic **11.3, plot range 4.1–24.2, subplots 0–67.8** kg N/ha/yr. COUNTER to
+  "mature tropical ⇒ near-zero." Not Manaus; extract the exact old-growth plot value before any
+  stand comparison.)*
+- Costa, T.L., et al. (2024). BNF in young and old tropical forests under five edaphoclimatic
+  conditions. *Nutrient Cycling in Agroecosystems* 128, 183–198. *Abstract checked.* *(Age, fixer
+  density and environment matter; fixation continues in old forests. **NB: reported kg N/ha are
+  leaf-N STOCKS, not annual fluxes** — cannot be placed on a kg N/ha/yr axis.)*
 
-**Fixation temperature response & regulation timescales (Tom's own data)**
-- Bytnerowicz, T.A., et al. (2022). Temperature sensitivity of woody N fixation. *Nature Plants* 8,
-  209–216. *(Woody-fixation temperature optima ~29–36.9 °C — ABOVE Houlton's conventional ~25 °C
-  optimum. So Houlton's warming cost penalty at hot Manaus is a property of that scheme, not a
-  demonstrated biological preference. "36 °C exceeds calibration" must distinguish GROWTH from
-  instantaneous MEASUREMENT temperature.)*
-- Bytnerowicz, T.A., et al. (2025). *(Regulation delays: ~31–51 days for 95% downregulation,
-  ~108–138 days for upregulation.)* Instantaneous cost-competition (FUN) is a modeling
-  approximation, not a demonstrated account of plant behavior — and motivates a running-mean
-  temperature for acclimation (cf. ACC_TEMPERATURE_CONFOUND.md).
+**Regulation & phosphorus — tests of the FUN mechanism**
+- Menge, D.N.L., et al. (2023). Tree symbioses sustain N fixation despite excess N supply. *Ecol.
+  Monographs* 93, e1562. *Abstract checked.* *(6 tree symbioses, 4–5 yr N addition, isotope
+  dilution — all maintained some fixation after N relief. Challenges "cheap soil N ⇒ fixation → 0"
+  as a universal rule. Particular trees/conditions, not a Manaus stand flux.)*
+- Bytnerowicz, T.A., Griffin, K.L., Menge, D.N.L. (2025). Time lags in the regulation of symbiotic
+  N fixation. *New Phytologist* 247, 1680–1693. *Primary text checked.* *(95% downregulation
+  31–51 d; upregulation 108–138 d. Instantaneous optimal allocation (FUN) is an approximation;
+  motivates growth-temperature memory for acclimation. Direction/magnitude of annual ELM bias
+  needs a model experiment.)*
+- Cunha, H.F.V., et al. (2022). Direct evidence for phosphorus limitation on Amazon forest
+  productivity. *Nature* 608, 558–562. *Abstract checked.* *(Old-growth Amazon: productivity
+  responds to **P** addition, not N/base cation. Take P co-limitation seriously; not a BNF
+  measurement, and a P cycle in ELM ≠ quantitatively-correct P limitation.)*
+
+**Temperature response (Tom's own data)**
+- Bytnerowicz, T.A., Akana, P.R., Griffin, K.L., Menge, D.N.L. (2022). Temperature sensitivity of
+  woody N fixation. *Nature Plants* 8, 209–216. *Abstract/figures checked.* *(Optima **29.0–36.9 °C**,
+  warmer than the conventional 25.2 °C; acclimation esp. in tropical symbioses. Reproducing the
+  executed Houlton function verifies *implementation*, not biological superiority of its warming
+  decline. "36 °C exceeds calibration" is under-specified — distinguish GROWTH-temperature
+  calibration from instantaneous MEASUREMENT-temperature coverage.)*
+
+**Boreal / temperate**
+- DeLuca, T.H., et al. (2002). Quantifying N-fixation in feather moss carpets of boreal forests.
+  *Nature* 419, 917–920. doi:10.1038/nature01051. *Bibliographic ID only — 1.5–2.0 passage NOT
+  retrieved.* *(Does NOT establish zero vascular symbiotic fixation.)*
+- DeLuca, T.H., et al. (2007). Ecosystem controls on N fixation in boreal feather moss communities.
+  *Oecologia* 152, 121–130. *Abstract checked.* *(Reciprocal moss transplants → fixation tracks the
+  nutrient environment: a **regulated** moss pathway. An ET-derived "free-living" term is not a
+  validated moss model; map moss-cyanobacteria explicitly to the model's operational free-living
+  category.)*
+- Alaska alder chronosequence (Mitchell-led; doi:10.1007/s10533-009-9332-x). *Lead only.* *(Author
+  list, ~6.6 kg N/ha/yr, and area denominator UNVERIFIED — excluded as a benchmark. "Alder stand"
+  ≠ "black-spruce column with an alder understory.")*
+- Harvard Forest: no stand-level BNF measurement verified here (record is N-deposition). Absence in
+  this audit is not evidence none exists.
 
 **Global budgets / model evaluation (constrain totals, NOT individual site verdicts)**
 - Reis, et al. (2025). Global terrestrial N fixation and its modification by agriculture. *Nature*
-  643, 705–711. doi:10.1038/s41586-025-09201-w. *(Natural BNF ~65 Tg N/yr, ~one-third of legacy
-  195.)*
-- Kou-Giesbrecht, S., et al. (2025). Overestimated biological N fixation translates to exaggerated
-  CO₂ fertilization effect in Earth system models. *PNAS* 122, e2514628122.
-  doi:10.1073/pnas.2514628122. *(>50% overestimate of present-day natural BNF confirmed; ALSO
-  reports that mechanistic models OVER-respond to CO₂ — 135% vs 31% in the cited experimental
-  meta-analysis. So it does NOT support "mechanistic models are right"; the exact 54% is unverified.)*
-- Meyerholt, J., Zaehle, S., Smith, M.J. (2016). Variability of projected terrestrial biosphere
-  responses to elevated CO₂ due to uncertainty in biological N fixation. *Biogeosciences* 13,
-  1491–1518. doi:10.5194/bg-13-1491-2016. *(Similar present-day totals can accompany very
-  different CO₂ responses — present ≠ future evaluation.)*
+  643, 705–711. doi:10.1038/s41586-025-09201-w. Field dataset: doi:10.5066/P1MFBVHK. *Record
+  checked.* *(Natural BNF 65 (52–77) Tg N/yr; corrects fixer-abundance oversampling. Global
+  aggregate — not a per-site factor. The dataset (location/niche/method/abundance/rate) is the
+  right resource for building comparable-observation rows.)*
+- Kou-Giesbrecht, S., et al. (2025). Overestimated natural BNF → exaggerated CO₂ fertilization in
+  ESMs. *PNAS* 122, e2514628122. doi:10.1073/pnas.2514628122. *Record checked.* *(>50% overestimate
+  of present-day natural BNF; mechanistic reps **over-respond to CO₂ (135% vs 31%** experimental
+  meta-analysis) — so it does NOT vindicate mechanistic models; ~11% CO₂-fertilization implication
+  is an ensemble inference; exact 54% unverified.)*
+- Meyerholt, J., Zaehle, S., Smith, M.J. (2016). *Biogeosciences* 13, 1491–1518.
+  doi:10.5194/bg-13-1491-2016. *Abstract checked.* *(6 formulations, contemporary global 108–148
+  Tg N/yr, but +200 ppm CO₂ response −3% to +42%. Baseline agreement ≠ perturbation agreement.)*
 
 **Upstream code defect**
 - ESCOMP/CTSM Issue #2120, "Switched parameters for non-mycorrhizal N uptake costs in FUN."
   https://github.com/ESCOMP/CTSM/issues/2120
+
+## How to evaluate properly (method note)
+- **One row per observation**, retaining: stand coordinates, forest age/disturbance, fixer
+  abundance, niche, measured quantity, area denominator, observation period, conversion method,
+  uncertainty. Never mix leaf-N stocks, nodule-specific rates, and annual ecosystem fluxes.
+- Compare a **time-matched present-day** ELM distribution against comparable-observation
+  distributions; assess **late-century change separately**, supported by perturbation experiments
+  (Menge 2023; Bytnerowicz 2025), not by ratios to contemporary observations.
+- Realized fixation cost = **flux-integrated ΣNPP_NFIX / ΣSNFIX** (matched area/time/units); do NOT
+  invert an unweighted mean efficiency.
+- ACC: **specify the mathematical temperature roles first** (growth-temperature memory vs reaction
+  temperature); then align measurement temperature, vertical weighting and forcing while retaining
+  intentional acclimation memory (cf. ACC_TEMPERATURE_CONFOUND.md).
