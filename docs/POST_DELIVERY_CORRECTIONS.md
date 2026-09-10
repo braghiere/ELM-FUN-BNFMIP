@@ -13,6 +13,9 @@ still open.
 
 Data: `data_csv_corrected/` = delivered (buggy code, s_fix=−0.1); `data_csv_corrected_v2/` =
 bugs fixed, s_fix still −0.1; `data_csv_sfixorig/` = bugs fixed + physical s_fix=−6 ("corrected").
+All ELM run values below (fluxes, the −93% response, the ~51 upper bound, the fixed/transient
+agreement) are computed from these project CSVs — internally consistent model output, **not**
+independent observational verification.
 
 ---
 
@@ -25,8 +28,8 @@ Detail: [docs/FUN_PARAMETER_AUDIT.md](FUN_PARAMETER_AUDIT.md)
   Manaus & Harvard (AM fraction > 0); Bonanza insulated (100% EcM).
 - **Defect B — `ivt(p).eq.7` should be `.eq.17`** in the AM N-cost branch (a PFT-index typo).
   Hits Harvard (PFT 7) directly.
-- Phosphorus pathway checked and **clean**. Fix applied to all variants and verified (compiles);
-  see [docs/corrections.md](corrections.md).
+- These two defects affect the **N** pathways; the corresponding **P** code did not show these
+  errors. Fix applied to all variants and verified (compiles); see [docs/corrections.md](corrections.md).
 
 These bugs distort the **N-acquisition pathway partitioning** (mycorrhizal vs non-myc vs
 fixation) at Manaus & Harvard — the delivered runs show an ecologically-backwards ~3%
@@ -107,11 +110,12 @@ declare a model winner** — and there is genuine counterevidence. Five reasons 
    Amazonia (and has a published correction); Cleveland 2010 is Rondônia (~4.5–6.8, not 0.2).
    There is no time-/niche-/scale-matched Manaus measurement to rank against.
 3. **Counterevidence that mature tropical ≠ near-zero.** [Brookshire et al. 2019](https://doi.org/10.1038/s41598-019-43962-5)
-   report ~4–24 kg N/ha/yr symbiotic in legume-rich Trinidad forest *including old-growth*. So a
-   low value is niche-specific, not a mature-forest law.
-4. **The FUN mechanism itself is challenged.** Menge et al. 2023 found tree symbioses *sustained*
-   fixation after N additions relieved N limitation — so "soil N available ⇒ fixation shuts down"
-   (ELM's instantaneous cost-competition) is a modeling approximation, not a demonstrated rule.
+   report ~4–24 kg N/ha/yr symbiotic **across legume-rich Trinidad forest plots, including an
+   old-growth stand**. So a low value is niche-specific — not a mature-forest law.
+4. **The FUN mechanism is an approximation.** Menge et al. 2023 found tree symbioses can *sustain*
+   fixation after N limitation is relieved, showing that cost-based regulation is an approximation
+   whose ecological consequences also need evaluation. Persistent fixation challenges *complete*
+   downregulation; it does not by itself show ELM's particular allocation algorithm is wrong.
    Tom's 2025 data (31–138-day regulation lags) point the same way.
 5. **Global budgets ≠ site verdicts.** Reis 2025 (downward global revision) and Kou-Giesbrecht 2025
    (>50% overestimate — but which *also* faults mechanistic models for over-responding to CO₂,
@@ -129,7 +133,7 @@ declare a model winner** — and there is genuine counterevidence. Five reasons 
 ### Observational context (leads, several still need primary verification)
 | site | relevant studies | rough magnitude | status |
 |---|---|---|---|
-| Manaus (mature tropical) | Cleveland 2010 (Rondônia); Barron 2011; Sullivan 2014 (Costa Rica); **counter:** Brookshire 2019 (Trinidad old-growth) | tropical symbiotic estimates span a **very wide range**: Cleveland ~4.5–6.8 (Rondônia); Sullivan (Costa Rica) *total* BNF ~1.2 (primary) / ~5.7 (gap-adjusted), corrections unaudited; Brookshire ~4–24 (Trinidad old-growth). ELM corrected symbiotic ~1.5–2.1 is at/below the low end | **no Manaus measurement**; location/niche/method differ; **do not quote a single "0.2" benchmark** |
+| Manaus (mature tropical) | Cleveland 2010 (Rondônia); Barron 2011; Sullivan 2014 (Costa Rica); **counter:** Brookshire 2019 (Trinidad plots incl. old-growth) | tropical symbiotic estimates span a **very wide range**: Cleveland ~4.5–6.8 (Rondônia); Sullivan (Costa Rica) *total* BNF ~1.2 (primary) / ~5.7 (gap-adjusted), corrections unaudited; Brookshire ~4–24 (across legume-rich Trinidad plots incl. old-growth). ELM corrected symbiotic ~1.5–2.1 is at/below the low end | **no verified comparable Manaus measurement identified here**; location/niche/method differ; **do not quote a single "0.2" benchmark** |
 | Bonanza (boreal upland) | DeLuca 2002 (feather moss 1.5–2.0); alder chronosequence (different niche) | feather-moss free-living ~1.5–2; ELM total ~2.1 | DeLuca does **not** establish zero vascular symbiotic fixation; ELM's upland column does not represent alder; consistent, not validated |
 | Harvard (temperate) | no site BNF measurement (record is N-deposition); temperate BNF spans orders of magnitude | essentially unconstrained | cannot adjudicate |
 
@@ -138,9 +142,9 @@ declare a model winner** — and there is genuine counterevidence. Five reasons 
 |---|---|
 | Corrected ELM more defensible than cheap-cost (~0.1 gC/gN) ELM? | **Yes** — fixation-cost plausibility |
 | Is low present-day symbiotic fixation at mature Manaus plausible? | **Yes** — not to be rejected just because other curves are higher |
-| Is low symbiotic fixation the mature-tropical *norm*? | **No** — Brookshire 2019 (old-growth Trinidad ~4–24) shows it is niche-dependent |
-| Is ELM's instantaneous cost-competition downregulation biologically demonstrated? | **No** — Menge 2023 (fixation persists when N relieved) + Bytnerowicz 2025 (multi-week regulation lags) |
-| Has ELM been shown closer to *comparable* Manaus observations? | **Not yet** — no verified Manaus benchmark; Sullivan is Costa Rica |
+| Is low symbiotic fixation *universal* in mature tropical forest? | **No** — Brookshire 2019 (legume-rich Trinidad plots incl. old-growth, ~4–24) is a counterexample. *(Disproves universality, not prevalence — the "norm" is unknown.)* |
+| Is ELM's cost-based downregulation biologically demonstrated? | **Not fully** — Menge 2023 (fixation persists after N limitation relieved → challenges *complete* downregulation) + Bytnerowicz 2025 (multi-week lags); does not by itself show the algorithm is wrong |
+| Has ELM been shown closer to *comparable* Manaus observations? | **Not yet** — no verified comparable Manaus measurement identified; Sullivan is Costa Rica |
 | Is ELM's future response more accurate? | **Unresolved** (and Kou-Giesbrecht faults mechanistic CO₂ over-response) |
 | Does ELM "win" at Bonanza or Harvard? | **Not established** |
 
