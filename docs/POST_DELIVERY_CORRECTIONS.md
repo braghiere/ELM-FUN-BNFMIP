@@ -158,3 +158,46 @@ observational comparison.
    obs first; treat the future response as its own analysis (Step 5, reason 1).
 4. **Sullivan (and site-obs) audit** — verify sampling scope/scale before using any field value as
    a target.
+
+---
+
+## References
+Verification status noted where a value/claim still needs primary confirmation.
+
+**FUN / cost framework**
+- Fisher, J.B., et al. (2010). Carbon cost of plant nitrogen acquisition: a mechanistic, globally
+  applicable model of plant N uptake, retranslocation, and fixation. *Global Biogeochem. Cycles*
+  24, GB1014.
+- Menge, D.N.L., et al. (2026). Global Carbon Investment in Terrestrial Biological Nitrogen
+  Fixation. *Global Biogeochem. Cycles* 40, e2026GB009098. doi:10.1029/2026GB009098. *(0.29%
+  investment depends on assumed BNF and cost — not an independent validation.)*
+
+**Site / niche observations**
+- Sullivan, B.W., et al. (2014). Spatially robust estimates of biological N fixation imply
+  substantial human alteration of the tropical N cycle. *PNAS* 111, 8101–8106.
+  doi:10.1073/pnas.1320646111. *(Quoted ~0.2 kg N/ha/yr symbiotic; sampling scope/scale for the
+  modeled Manaus stand UNVERIFIED here.)*
+- Cusack, D.F., et al. (2009). Using indirect methods to constrain symbiotic N fixation rates: a
+  case study from an Amazonian rain forest. *Biogeochemistry*. doi:10.1007/s10533-009-9392-y.
+- DeLuca, T.H., et al. (2002). Quantifying nitrogen-fixation in feather moss carpets of boreal
+  forests. *Nature* 419, 917–920. doi:10.1038/nature01051. *(Feather-moss niche ~1.5–2.0 kg
+  N/ha/yr; does not establish zero vascular symbiotic fixation.)*
+- Ruess and colleagues — green-alder (*Alnus viridis*) N fixation across an interior-Alaska
+  successional chronosequence, Bonanza Creek LTER. *Biogeochemistry*. doi:10.1007/s10533-009-9332-x.
+  *(~6.6 kg N/ha/yr; different niche from mature black spruce.)*
+
+**Global budgets / model evaluation (constrain totals, NOT individual site verdicts)**
+- Reis, et al. (2025). Global terrestrial N fixation and its modification by agriculture. *Nature*
+  643, 705–711. doi:10.1038/s41586-025-09201-w. *(Natural BNF ~65 Tg N/yr, ~one-third of legacy
+  195.)*
+- Kou-Giesbrecht, S., et al. (2025). Overestimated biological N fixation translates to exaggerated
+  CO₂ fertilization effect in Earth system models. *PNAS* 122, e2514628122.
+  doi:10.1073/pnas.2514628122. *(~54% overestimate — figure needs primary verification.)*
+- Meyerholt, J., Zaehle, S., Smith, M.J. (2016). Variability of projected terrestrial biosphere
+  responses to elevated CO₂ due to uncertainty in biological N fixation. *Biogeosciences* 13,
+  1491–1518. doi:10.5194/bg-13-1491-2016. *(Similar present-day totals can accompany very
+  different CO₂ responses — present ≠ future evaluation.)*
+
+**Upstream code defect**
+- ESCOMP/CTSM Issue #2120, "Switched parameters for non-mycorrhizal N uptake costs in FUN."
+  https://github.com/ESCOMP/CTSM/issues/2120
