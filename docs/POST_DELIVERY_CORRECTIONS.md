@@ -11,8 +11,13 @@ BNFMIP models is **not established** — only that its revised cost has a strong
 basis than the cheap-cost configuration. One implementation issue (ACC temperature input) is
 still open.
 
-Data: `data_csv_corrected/` = delivered (buggy code, s_fix=−0.1); `data_csv_corrected_v2/` =
-bugs fixed, s_fix still −0.1; `data_csv_sfixorig/` = bugs fixed + physical s_fix=−6 ("corrected").
+➡️ **Dataset to use: [`data_csv_sfixorig/`](../data_csv_sfixorig/)** (bugs fixed + physical
+s_fix=−6). It supersedes the delivered `data_csv_corrected/` and has the same layout/units — see
+its [README](../data_csv_sfixorig/README.md). (noAcc/Houlton ready; ACC provisional pending the
+temperature-roles decision, Step 6.)
+
+Data lineage: `data_csv_corrected/` = delivered (buggy code, s_fix=−0.1); `data_csv_corrected_v2/`
+= bugs fixed, s_fix still −0.1; `data_csv_sfixorig/` = bugs fixed + physical s_fix=−6 ("corrected").
 All ELM run values below (fluxes, the −93% response, the ~51 upper bound, the fixed/transient
 agreement) are computed from these project CSVs — internally consistent model output, **not**
 independent observational verification.

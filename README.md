@@ -74,8 +74,11 @@ the Manaus §5.5 case-build fix, and the Harvard PFT caveat).
 step-by-step story — bugs → retuning reversal → corrected results → literature evaluation →
 open issues — is in **[`docs/POST_DELIVERY_CORRECTIONS.md`](docs/POST_DELIVERY_CORRECTIONS.md)**
 (with [FUN_PARAMETER_AUDIT](docs/FUN_PARAMETER_AUDIT.md), [SFIX_DECISION](docs/SFIX_DECISION.md),
-and [ACC_TEMPERATURE_CONFOUND](docs/ACC_TEMPERATURE_CONFOUND.md)). Note: the headline table below
-reflects the **delivered** runs and predates these corrections.
+and [ACC_TEMPERATURE_CONFOUND](docs/ACC_TEMPERATURE_CONFOUND.md)).
+
+➡️ **Corrected dataset to use: [`data_csv_sfixorig/`](data_csv_sfixorig/)** (supersedes the
+delivered `data_csv_corrected/`; see its [README](data_csv_sfixorig/README.md)). Note: the headline
+table below reflects the **delivered** runs and predates these corrections.
 
 ## Requirements
 
