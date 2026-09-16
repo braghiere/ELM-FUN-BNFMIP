@@ -50,3 +50,14 @@ discontinuity). See `scripts/rebuild_or-scratch24/shortcut_all.sh`.
 `scripts/rebuild_or-scratch24/` — the exact rebuild scripts: per-site AD re-runs (`rerun_{ha1,bon}.sh`),
 the transient proof (`proof_bonfun_sec53.sh`), the restart-shortcut fan-out (`shortcut_all.sh`),
 the AD→FN→transient autochainer (`fn_autochain.sh`), and the from-scratch finisher (`finish_all.sh`).
+
+## Addendum (2026-09-16): a step the recipe omitted — `LDFLAGS` for PIO's cmake
+The July/Sept-8 builds succeeded only because `LDFLAGS="-L$OLCF_HDF5_ROOT/lib -lhdf5_hl -lhdf5 -lz -ldl -lm"` was
+exported by hand in the build shell: cmake seeds `CMAKE_EXE_LINKER_FLAGS` from it, which lets PIO's netcdf probes
+resolve the parallel-HDF5 `H5P*_mpio` symbols that `netcdf-c-4.9.2-mpi-h5f` needs (otherwise ld binds the
+NEEDED `libhdf5.so.310` to `~/miniconda3/lib`'s serial copy via `LD_LIBRARY_PATH` and the probe fails with
+"size_t and long long must be the same size!"). Without it a fresh build fails in PIO. Make it permanent by adding
+to the `cades` block of `config_machines.xml`:
+`<env name="LDFLAGS">-L$ENV{OLCF_HDF5_ROOT}/lib -lhdf5_hl -lhdf5 -lz -ldl -lm</env>` (done in the
+`elm_fun_trendy_2022/E3SM_global` tree for the 2022-corrigendum runs; the `E3SM_global_silent` tree still relies
+on the shell export).
